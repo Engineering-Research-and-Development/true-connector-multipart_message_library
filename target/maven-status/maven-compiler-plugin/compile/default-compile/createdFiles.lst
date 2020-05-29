@@ -1,0 +1,6 @@
+it\eng\idsa\multipart\processor\MultipartMessageProcessor$1.class
+it\eng\idsa\multipart\processor\MultipartMessageProcessor.class
+it\eng\idsa\multipart\builder\MultipartMessageBuilder.class
+it\eng\idsa\multipart\util\MultipartMessageKey.class
+it\eng\idsa\multipart\domain\MultipartMessage.class
+it\eng\idsa\multipart\util\DateUtil.class
