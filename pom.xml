@@ -9,6 +9,13 @@
 	<name>multipart-message-processor</name>
 	<description>The library for the project Market4.0</description>
 
+       <repositories>
+		 <repository>
+	     		<id>snapshots</id>
+	    		<name>maven-snapshots</name>
+	    		<url>https://maven.iais.fraunhofer.de/artifactory/eis-ids-public</url>
+		</repository>
+    	</repositories>
 	<properties>
 		<java.version>11</java.version>
 		<information.model.version>2.1.0-SNAPSHOT</information.model.version>
