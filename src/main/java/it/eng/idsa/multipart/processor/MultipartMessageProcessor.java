@@ -122,7 +122,7 @@ public class MultipartMessageProcessor {
             headerHeaderString = message.getHeaderHeader()
                     .entrySet()
                     .parallelStream()
-                    .map(e -> e.getValue().toString())
+                    .flatMap(e -> Stream.of(e.getKey() + ": " + e.getValue()))
                     .collect(Collectors.joining(System.lineSeparator()));
         }
         multipartMessageString.append(headerHeaderString + System.lineSeparator());
@@ -143,7 +143,7 @@ public class MultipartMessageProcessor {
                 payloadHeader = message.getPayloadHeader()
                         .entrySet()
                         .parallelStream()
-                        .map(e -> e.getValue().toString())
+                        .flatMap(e -> Stream.of(e.getKey() + ": " + e.getValue()))
                         .collect(Collectors.joining(System.lineSeparator()));
             }
             multipartMessageString.append(payloadHeader + System.lineSeparator());
@@ -166,7 +166,7 @@ public class MultipartMessageProcessor {
                 signatureHeaderString = message.getSignatureHeader()
                         .entrySet()
                         .parallelStream()
-                        .map(e -> e.getValue().toString())
+                        .flatMap(e -> Stream.of(e.getKey() + ": " + e.getValue()))
                         .collect(Collectors.joining(System.lineSeparator()));
             }
             multipartMessageString.append(signatureHeaderString + System.lineSeparator());
@@ -190,7 +190,7 @@ public class MultipartMessageProcessor {
         String defaultHttpHeadersToString = httpHeaders
                 .entrySet()
                 .parallelStream()
-                .map(e -> e.getKey().toString() + ": " + e.getValue().toString())
+                .flatMap(e -> Stream.of(e.getKey() + ": " + e.getValue()))
                 .collect(Collectors.joining(System.lineSeparator()));
         return defaultHttpHeadersToString;
     }
@@ -290,15 +290,15 @@ public class MultipartMessageProcessor {
         Map<String, String> partHeader = new HashMap<String, String>();
 
         String partContetDisposition = part.parallelStream().filter(line -> predicateLineContentDisposition.test(line.toLowerCase())).findFirst().get();
-        partHeader.put(MultipartMessageKey.CONTENT_DISPOSITION.label, partContetDisposition);
+        partHeader.put(MultipartMessageKey.CONTENT_DISPOSITION.label, partContetDisposition.split(":")[1].trim());
 
         String partContentLength = part.parallelStream().filter(line -> predicateLineContentLength.test(line.toLowerCase())).findFirst().get();
-        partHeader.put(MultipartMessageKey.CONTENT_LENGTH.label, partContentLength);
+        partHeader.put(MultipartMessageKey.CONTENT_LENGTH.label, partContentLength.split(":")[1].trim());
 
 		Optional<String> partContentType = part.parallelStream()
 				.filter(line -> predicateLineContentType.test(line.toLowerCase())).findFirst();
 		if (partContentType.isPresent()) {
-			partHeader.put(MultipartMessageKey.CONTENT_TYPE.label, partContentType.get());
+			partHeader.put(MultipartMessageKey.CONTENT_TYPE.label, partContentType.get().split(":")[1].trim());
 		}
 
         return partHeader;

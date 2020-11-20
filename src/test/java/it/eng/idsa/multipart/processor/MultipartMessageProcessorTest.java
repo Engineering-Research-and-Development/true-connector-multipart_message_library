@@ -25,7 +25,7 @@ public class MultipartMessageProcessorTest {
 	private String MULTIPART_MESSAGE_NAME = "IDS-multipart.txt";
 	
 	private Map<String, String> expectedHttpHeader  = new HashMap<String, String>() {{
-	    put(MultipartMessageKey.CONTENT_TYPE.label, "Content-Type: multipart/mixed; boundary=CQWZRdCCXr5aIuonjmRXF-QzcZ2Kyi4Dkn6;charset=UTF-8");
+	    put(MultipartMessageKey.CONTENT_TYPE.label, "multipart/mixed; boundary=CQWZRdCCXr5aIuonjmRXF-QzcZ2Kyi4Dkn6;charset=UTF-8");
 	    put(MultipartMessageKey.FORWARD_TO.label, "Forward-To: broker");
 	}}; 
 	
@@ -42,18 +42,18 @@ public class MultipartMessageProcessorTest {
 	private String expectedSignatureContentString = "{\"signature.resourceEndpoints.path\":\"/signature\"}";
 	
 	private Map<String, String> expectedHeaderHeader  = new HashMap<String, String>() {{
-	    put(MultipartMessageKey.CONTENT_DISPOSITION.label, "Content-Disposition: form-data; name=\"header\"");
-	    put(MultipartMessageKey.CONTENT_LENGTH.label, "Content-Length: 534");
+	    put(MultipartMessageKey.CONTENT_DISPOSITION.label, "form-data; name=\"header\"");
+	    put(MultipartMessageKey.CONTENT_LENGTH.label, "534");
 	}};
 	
 	private Map<String, String> expectedPayloadHeader  = new HashMap<String, String>() {{
-	    put(MultipartMessageKey.CONTENT_DISPOSITION.label, "Content-Disposition: form-data; name=\"payload\"");
-	    put(MultipartMessageKey.CONTENT_LENGTH.label, "Content-Length: 50");
+	    put(MultipartMessageKey.CONTENT_DISPOSITION.label, "form-data; name=\"payload\"");
+	    put(MultipartMessageKey.CONTENT_LENGTH.label, "50");
 	}};
 	
 	private Map<String, String> expectedSignatureHeader  = new HashMap<String, String>() {{
-	    put(MultipartMessageKey.CONTENT_DISPOSITION.label, "Content-Disposition: form-data; name=\"signature\"");
-	    put(MultipartMessageKey.CONTENT_LENGTH.label, "Content-Length: 49");
+	    put(MultipartMessageKey.CONTENT_DISPOSITION.label, "form-data; name=\"signature\"");
+	    put(MultipartMessageKey.CONTENT_LENGTH.label, "49");
 	}};
 	
 	
@@ -254,10 +254,30 @@ public class MultipartMessageProcessorTest {
 		// TODO: should fix the part "assertEquals(..." for the "headerContent" part
 		// Problem: order in the JSON headerContent is not same every time....
 //		assertEquals("Header is not as expected", expectedHeader.trim(), resultHeader.trim());
-		assertTrue("", contentType.startsWith("Content-Type: multipart/mixed; boundary="));
+		assertTrue("", contentType.startsWith("multipart/mixed; boundary="));
 		assertEquals("Numbers parts in the multipart message are 3", 3, parts.length);
 		assertEquals("Payload is not as expected", expectedPayload.trim(), resultPayload.trim());
 		assertEquals("Singnture is not as expected", expectedSignature.trim(), resultSignature.trim());
 		
 	}
+	
+	@Test
+	public void splitString() {
+		String contentType = "Content-Type: application/json";
+//		System.out.println(contentType.split(":")[1].trim());
+	
+		Map<String, String> headers = new HashMap<>();
+		headers.put("Content-Type", "application/json");
+		headers.put("Content-Disposition", "form-data; name=\"header\"");
+		
+		 String headerHeaderString = headers
+                 .entrySet()
+                 .parallelStream()
+                 .flatMap(e -> Stream.of(e.getKey() + ": " + e.getValue()))
+                 .collect(Collectors.joining(System.lineSeparator()));
+		System.out.println(headerHeaderString);
+	}
+	
+	
+	
 }
