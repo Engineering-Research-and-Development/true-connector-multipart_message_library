@@ -445,6 +445,18 @@ public class MultipartMessageProcessor {
         String serializePlainJson = serializer.serializePlainJson(object);
         return removeTimezoneFromIssued(serializePlainJson);
     }
+    
+    /**
+     * Serialize message to JsonLD format, plus applying time zone handling UTC -> Z 
+     * @param object
+     * @return
+     * @throws IOException
+     */
+    public static String serializeToJsonLD(Object object) throws IOException {
+        Serializer serializer = new Serializer();
+        String serializePlainJson = serializer.serialize(object);
+        return removeTimezoneFromIssued(serializePlainJson);
+    }
 
 
     private static String removeTimezoneFromIssued(String objectJson) {
