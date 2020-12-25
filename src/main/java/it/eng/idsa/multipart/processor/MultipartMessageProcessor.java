@@ -1,23 +1,28 @@
 package it.eng.idsa.multipart.processor;
 
-import de.fraunhofer.iais.eis.ids.jsonld.Serializer;
-import it.eng.idsa.multipart.builder.MultipartMessageBuilder;
-import it.eng.idsa.multipart.domain.MultipartMessage;
-import it.eng.idsa.multipart.util.MultipartMessageKey;
-
-import org.apache.http.entity.ContentType;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.Random;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import org.apache.http.entity.ContentType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import de.fraunhofer.iais.eis.ids.jsonld.Serializer;
+import it.eng.idsa.multipart.builder.MultipartMessageBuilder;
+import it.eng.idsa.multipart.domain.MultipartMessage;
+import it.eng.idsa.multipart.util.MultipartMessageKey;
 
 /**
  * @author Milan Karajovic and Gabriele De Luca
@@ -35,6 +40,7 @@ public class MultipartMessageProcessor {
     private static final Predicate<String> predicateLineContentType = (line) -> line.trim().startsWith(MultipartMessageKey.CONTENT_TYPE.label.toLowerCase());
     private static final Predicate<String> predicateLineContentDisposition = (line) -> line.trim().startsWith(MultipartMessageKey.CONTENT_DISPOSITION.label.toLowerCase());
     private static final Predicate<String> predicateLineContentLength = (line) -> line.trim().startsWith(MultipartMessageKey.CONTENT_LENGTH.label.toLowerCase());
+    private static final Predicate<String> predicateLineContentTransferEncoding = (line) -> line.trim().startsWith(MultipartMessageKey.CONTENT_TRANSFER_ENCODING.label.toLowerCase());
     private static final Predicate<String> predicateLineEmpty = (line) -> line.trim().isEmpty();
     private static final char[] BOUNDARY_CHARS = "-_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
     private static final String DEFAULT_CONTENT_TYPE = "multipart/mixed; boundary=CQWZRdCCXr5aIuonjmRXF-QzcZ2Kyi4Dkn6;charset=UTF-8";
@@ -323,6 +329,11 @@ public class MultipartMessageProcessor {
         return partName;
     }
 
+    /**
+     * Configure predicate lines in order to only extract the headers
+     * @param part
+     * @return
+     */
     private static Map<String, String> getPartHeader(List<String> part) {
         Map<String, String> partHeader = new HashMap<String, String>();
 
@@ -337,19 +348,31 @@ public class MultipartMessageProcessor {
 		if (partContentType.isPresent()) {
 			partHeader.put(MultipartMessageKey.CONTENT_TYPE.label, partContentType.get().split(":")[1].trim());
 		}
+		
+		Optional<String> partContentTransferEncoding = part.parallelStream()
+				.filter(line -> predicateLineContentTransferEncoding.test(line.toLowerCase())).findFirst();
+		if (partContentTransferEncoding.isPresent()) {
+			partHeader.put(MultipartMessageKey.CONTENT_TRANSFER_ENCODING.label, partContentTransferEncoding.get().split(":")[1].trim());
+		}
 
         return partHeader;
     }
 
+    /**
+     * Configure predicate lines to skip in order to return only JSON part without headers
+     * @param part
+     * @return
+     */
     private static String getPartContent(List<String> part) {
         OptionalInt startPostionContent = IntStream.range(0, part.size())
                 .filter(index ->
                         (
                                 (
                                         !predicateLineContentDisposition.test(part.get(index).toLowerCase()) &&
-                                                !predicateLineContentLength.test(part.get(index).toLowerCase()) &&
-                                                !predicateLineContentType.test(part.get(index).toLowerCase()) &&
-                                                !predicateLineEmpty.test(part.get(index))
+                                        !predicateLineContentLength.test(part.get(index).toLowerCase()) &&
+                                        !predicateLineContentTransferEncoding.test(part.get(index).toLowerCase()) &&
+                                        !predicateLineContentType.test(part.get(index).toLowerCase()) &&
+                                        !predicateLineEmpty.test(part.get(index))
                                 )
                         )
                 )

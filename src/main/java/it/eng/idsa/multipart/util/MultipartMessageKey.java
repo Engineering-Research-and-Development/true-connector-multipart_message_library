@@ -15,6 +15,7 @@ public enum MultipartMessageKey {
 	CONTENT_TYPE("Content-Type"),
 	FORWARD_TO("Forward-To"),
 	CONTENT_DISPOSITION("Content-Disposition"),
+	CONTENT_TRANSFER_ENCODING("Content-Transfer-Encoding"),
 	CONTENT_LENGTH("Content-Length");
  
     public final String label;
