@@ -417,7 +417,7 @@ public class MultipartMessageProcessor {
         return Optional.ofNullable(boundary);
     }
 
-    private static Optional<String> getMessageBoundaryFromMessage(String message) {
+    public static Optional<String> getMessageBoundaryFromMessage(String message) {
         String boundary = null;
         Stream<String> lines = message.lines();
         boundary = lines.filter(line -> line.startsWith("--"))
@@ -534,4 +534,5 @@ public class MultipartMessageProcessor {
         }
         return objectJson;
     }
+    
 }
