@@ -286,6 +286,9 @@ public class MultipartMessageProcessorTest {
 		System.out.println(headerHeaderString);
 	}
 	
-	
+	@Test
+	public void failTest() {
+		assertTrue(false);
+	}
 	
 }
