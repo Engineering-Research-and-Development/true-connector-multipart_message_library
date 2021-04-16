@@ -16,8 +16,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.apache.http.entity.ContentType;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.fraunhofer.iais.eis.ids.jsonld.Serializer;
 import it.eng.idsa.multipart.builder.MultipartMessageBuilder;
@@ -33,7 +33,7 @@ import it.eng.idsa.multipart.util.MultipartMessageKey;
  */
 public class MultipartMessageProcessor {
 
-    private static final Logger logger = LogManager.getLogger(MultipartMessageProcessor.class);
+	private static final Logger logger = LoggerFactory.getLogger(MultipartMessageProcessor.class);
 
     private static final String REGEX_BOUNDARY = "(.*?)boundary=(.*);.*";
     private static final String REGEX_NAME = "(.*?)name=\"(.*)\"(.*?)";
