@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.NotificationMessage;
@@ -25,7 +25,7 @@ import it.eng.idsa.multipart.domain.MultipartMessage;
 
 public class MultipartMessageBuilder {
 	
-	private static final Logger logger = LogManager.getLogger(MultipartMessageBuilder.class);
+	private static final Logger logger = LoggerFactory.getLogger(MultipartMessageBuilder.class);
 		
 	private Map<String, String> httpHeaders = new HashMap<>();
 	private Map<String, String> headerHeader = new HashMap<>();

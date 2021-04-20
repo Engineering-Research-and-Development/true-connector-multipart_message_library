@@ -5,28 +5,25 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.eng.idsa</groupId>
 	<artifactId>multipart-message-processor</artifactId>
-	<version>1.0.7-SNAPSHOT</version>
+	<version>1.0.8-SNAPSHOT</version>
 	<name>multipart-message-processor</name>
 	<description>The library for the project Market4.0</description>
 
-       <repositories>
-		 <repository>
-	     		<id>snapshots</id>
-	    		<name>maven-snapshots</name>
-	    		<url>https://maven.iais.fraunhofer.de/artifactory/eis-ids-public</url>
+	<repositories>
+		<repository>
+			<id>snapshots</id>
+			<name>maven-snapshots</name>
+			<url>https://maven.iais.fraunhofer.de/artifactory/eis-ids-public</url>
 		</repository>
-    	</repositories>
+	</repositories>
 	<properties>
-		<java.version>11</java.version>
+		<project.java.version>11</project.java.version>
 		<information.model.version>4.0.0</information.model.version>
 		<log4j.version>2.14.0</log4j.version>
-		<maven.compiler.source>${java.version}</maven.compiler.source>
-		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<dependencies>
-
 		<!-- Fraunhofer -->
 		<dependency>
 			<groupId>de.fraunhofer.iais.eis.ids.infomodel</groupId>
@@ -39,16 +36,21 @@
 			<version>${information.model.version}</version>
 		</dependency>
 
+		<!-- Loggign -->
 		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>${log4j.version}</version>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-core</artifactId>
+		    <version>1.2.3</version>
 		</dependency>
-
 		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-slf4j-impl</artifactId>
-			<version>${log4j.version}</version>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-classic</artifactId>
+		    <version>1.2.3</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-api</artifactId>
+		    <version>1.7.30</version>
 		</dependency>
 
 		<!-- JUnit 5 -->
@@ -64,17 +66,24 @@
 			<version>1.2.0</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 
 	<build>
 		<plugins>
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
+			    <configuration>
+			        <release>${project.java.version}</release>
+			        <encoding>${project.build.sourceEncoding}</encoding>
+			    </configuration>
+			</plugin>
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.4</version>
 			</plugin>
-
+			<!-- 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -88,6 +97,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			 -->
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
