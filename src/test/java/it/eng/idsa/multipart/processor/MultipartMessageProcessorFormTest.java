@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import de.fraunhofer.iais.eis.Message;
 import it.eng.idsa.multipart.domain.MultipartMessage;
-import it.eng.idsa.multipart.processor.util.TestUtilMessageService;
+import it.eng.idsa.multipart.util.TestUtilMessageService;
 
 public class MultipartMessageProcessorFormTest {
 
@@ -43,8 +43,6 @@ public class MultipartMessageProcessorFormTest {
 	String contentDispositionHeader = "form-data; name=\"header\"";
 	String contentDispositionPayload = "form-data; name=\"payload\"";
 	
-	
-	
 	@Test
 	public void parseMultipartMessageTest() {
 		MultipartMessage multipartMessage = MultipartMessageProcessor.parseMultipartMessage(messageAsString);
@@ -59,6 +57,8 @@ public class MultipartMessageProcessorFormTest {
 		assertEquals(message.getTransferContract(), multipartMessage.getHeaderContent().getTransferContract());
 		assertEquals(message.getIssuerConnector(), multipartMessage.getHeaderContent().getIssuerConnector());
 		assertEquals(message.getModelVersion(), multipartMessage.getHeaderContent().getModelVersion());
+		assertEquals(message.getSenderAgent(), multipartMessage.getHeaderContent().getSenderAgent());
+		
 		assertEquals(contentType, multipartMessage.getHeaderHeader().get(HTTP.CONTENT_TYPE));
 		assertEquals(contentTransferEncoding, multipartMessage.getHeaderHeader().get("Content-Transfer-Encoding"));
 		assertEquals(contentLengthHeader, multipartMessage.getHeaderHeader().get(HTTP.CONTENT_LEN));

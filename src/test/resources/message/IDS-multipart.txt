@@ -13,7 +13,18 @@ Content-Length: 534
   "issuerConnector" : "http://iais.fraunhofer.de/ids/mdm-connector",
   "correlationMessage" : "http://industrialdataspace.org/connectorUnavailableMessage/1a421b8c-3407-44a8-aeb9-253f145c869a",
   "transferContract" : "https://mdm-connector.ids.isst.fraunhofer.de/examplecontract/bab-bayern-sample/",
-  "modelVersion" : "1.0.2-SNAPSHOT",
+  "modelVersion" : "4.0.6",
+   "ids:securityToken" : {
+    "@type" : "ids:DynamicAttributeToken",
+    "@id" : "https://w3id.org/idsa/autogen/dynamicAttributeToken/87d9317c-c23f-4dce-8a8d-8f244d5aada9",
+    "ids:tokenValue" : "DummyTokenValue",
+    "ids:tokenFormat" : {
+      "@id" : "https://w3id.org/idsa/code/JWT"
+    }
+  },
+  "ids:senderAgent" : {
+    "@id" : "http://sender.agent/sender"
+  },
   "@id" : "https://w3id.org/idsa/autogen/artifactResponseMessage/eb3ab487-dfb0-4d18-b39a-585514dd044f"
 }
 --CQWZRdCCXr5aIuonjmRXF-QzcZ2Kyi4Dkn6
