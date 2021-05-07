@@ -27,7 +27,6 @@ import de.fraunhofer.iais.eis.DescriptionRequestMessageBuilder;
 import de.fraunhofer.iais.eis.DynamicAttributeToken;
 import de.fraunhofer.iais.eis.DynamicAttributeTokenBuilder;
 import de.fraunhofer.iais.eis.LeftOperand;
-import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.Permission;
 import de.fraunhofer.iais.eis.PermissionBuilder;
 import de.fraunhofer.iais.eis.TokenFormat;
@@ -66,6 +65,10 @@ public class TestUtilMessageService {
 		}
 	}
 	
+	/**
+	 * Creates ArtifactRequestMessage
+	 * @return
+	 */
 	public static ArtifactRequestMessage getArtifactRequestMessage() {
 		return new ArtifactRequestMessageBuilder()
 				._issued_(ISSUED)
@@ -78,7 +81,28 @@ public class TestUtilMessageService {
 				._securityToken_(getDynamicAttributeToken())
 				.build();
 	}
+	
+	/**
+	 * Creates ArtifactRequestMessage with option to pass requestedAritfact URI
+	 * @param requestedArtifact
+	 * @return
+	 */
+	public static ArtifactRequestMessage getArtifactRequestMessage(URI requestedArtifact) {
+		return new ArtifactRequestMessageBuilder()
+				._issued_(ISSUED)
+				._correlationMessage_(CORRELATION_MESSAGE)
+				._issuerConnector_(ISSUER_CONNECTOR)
+				._senderAgent_(SENDER_AGENT)
+				._modelVersion_(MODEL_VERSION)
+				._requestedArtifact_(requestedArtifact)
+				._securityToken_(getDynamicAttributeToken())
+				.build();
+	}
 
+	/**
+	 * Creates ArtifactResponseMessage
+	 * @return
+	 */
 	public static ArtifactResponseMessage getArtifactResponseMessage() {
 		return new ArtifactResponseMessageBuilder()
 				._issued_(ISSUED)
@@ -91,6 +115,10 @@ public class TestUtilMessageService {
 				.build();
 	}
 	
+	/**
+	 * Creates DescriptionRequestMessage
+	 * @return
+	 */
 	public static DescriptionRequestMessage getDescriptionRequestMessage() {
 		return new DescriptionRequestMessageBuilder()
 				._issued_(ISSUED)
@@ -103,7 +131,7 @@ public class TestUtilMessageService {
 	}
 
 	/**
-	 * Used as header in contract agreement flow
+	 * Creates ContractAgreementMessage</br> Used as header in contract agreement flow
 	 * @return
 	 */
 	public static ContractAgreementMessage getContractAgreementMessage() {
@@ -159,7 +187,7 @@ public class TestUtilMessageService {
 				.build();
 	}
 	
-	public static String getMessageAsString(Message message) {
+	public static String getMessageAsString(Object message) {
 		try {
 			return MultipartMessageProcessor.serializeToJsonLD(message);
 		} catch (IOException e) {
@@ -168,6 +196,10 @@ public class TestUtilMessageService {
 		return null;
 	}
 	
+	/**
+	 * Creates DynamicAttributeToken with DummyTokenValue
+	 * @return
+	 */
 	public static DynamicAttributeToken getDynamicAttributeToken() {
 		return new DynamicAttributeTokenBuilder()
 				._tokenFormat_(TokenFormat.JWT)
