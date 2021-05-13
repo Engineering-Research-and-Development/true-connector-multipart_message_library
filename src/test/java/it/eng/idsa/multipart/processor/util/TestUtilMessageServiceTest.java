@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import de.fraunhofer.iais.eis.ContractAgreement;
 import de.fraunhofer.iais.eis.Message;
+import de.fraunhofer.iais.eis.RejectionMessage;
+import de.fraunhofer.iais.eis.RejectionReason;
 import it.eng.idsa.multipart.util.TestUtilMessageService;
 
 /**
@@ -58,6 +60,12 @@ public class TestUtilMessageServiceTest {
 		// mandatory fields from version 4.0.6
 		assertNotNull(ca.getContractStart());
 		assertNotNull(ca.getContractEnd());
+	}
+	
+	@Test
+	public void rejectionMessage() {
+		RejectionMessage rejection = TestUtilMessageService.getRejectionMessage(RejectionReason.NOT_FOUND);
+		assertNotNull(rejection);
 	}
 	
 	private void verifyFields(Message message) {

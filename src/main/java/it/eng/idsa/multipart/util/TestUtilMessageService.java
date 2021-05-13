@@ -29,6 +29,9 @@ import de.fraunhofer.iais.eis.DynamicAttributeTokenBuilder;
 import de.fraunhofer.iais.eis.LeftOperand;
 import de.fraunhofer.iais.eis.Permission;
 import de.fraunhofer.iais.eis.PermissionBuilder;
+import de.fraunhofer.iais.eis.RejectionMessage;
+import de.fraunhofer.iais.eis.RejectionMessageBuilder;
+import de.fraunhofer.iais.eis.RejectionReason;
 import de.fraunhofer.iais.eis.TokenFormat;
 import de.fraunhofer.iais.eis.util.RdfResource;
 import de.fraunhofer.iais.eis.util.Util;
@@ -111,6 +114,18 @@ public class TestUtilMessageService {
 				._issuerConnector_(ISSUER_CONNECTOR)
 				._senderAgent_(SENDER_AGENT)
 				._modelVersion_(MODEL_VERSION)
+				._securityToken_(getDynamicAttributeToken())
+				.build();
+	}
+	
+	public static RejectionMessage getRejectionMessage(RejectionReason rejectionReason) {
+		return new RejectionMessageBuilder()
+				._issued_(ISSUED)
+				._correlationMessage_(CORRELATION_MESSAGE)
+				._modelVersion_(MODEL_VERSION)
+				._rejectionReason_(rejectionReason)
+				._senderAgent_(SENDER_AGENT)
+				._issuerConnector_(ISSUER_CONNECTOR)
 				._securityToken_(getDynamicAttributeToken())
 				.build();
 	}
