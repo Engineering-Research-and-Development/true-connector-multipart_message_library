@@ -2,10 +2,16 @@ package it.eng.idsa.multipart.processor.util;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.net.URI;
+
 import org.junit.jupiter.api.Test;
 
+import de.fraunhofer.iais.eis.ConnectorUnavailableMessage;
+import de.fraunhofer.iais.eis.ConnectorUpdateMessage;
 import de.fraunhofer.iais.eis.ContractAgreement;
 import de.fraunhofer.iais.eis.Message;
+import de.fraunhofer.iais.eis.QueryLanguage;
+import de.fraunhofer.iais.eis.QueryMessage;
 import de.fraunhofer.iais.eis.RejectionMessage;
 import de.fraunhofer.iais.eis.RejectionReason;
 import it.eng.idsa.multipart.util.TestUtilMessageService;
@@ -17,7 +23,7 @@ import it.eng.idsa.multipart.util.TestUtilMessageService;
  *
  */
 public class TestUtilMessageServiceTest {
-
+	
 	@Test 
 	public void artifactRequestMessage() {
 		Message message = TestUtilMessageService.getArtifactRequestMessage();
@@ -66,6 +72,27 @@ public class TestUtilMessageServiceTest {
 	public void rejectionMessage() {
 		RejectionMessage rejection = TestUtilMessageService.getRejectionMessage(RejectionReason.NOT_FOUND);
 		assertNotNull(rejection);
+	}
+	
+	@Test
+	public void connectorUpdateMessage() {
+		ConnectorUpdateMessage msg = TestUtilMessageService.getConnectorUpdateMessage(TestUtilMessageService.SENDER_AGENT, 
+				TestUtilMessageService.ISSUER_CONNECTOR, TestUtilMessageService.AFFECTED_CONNECOTR);
+		assertNotNull(msg);
+	}
+	
+	@Test
+	public void connectorUnavailableMessage() {
+		ConnectorUnavailableMessage msg = TestUtilMessageService.getConnectorUnavailableMessage(TestUtilMessageService.SENDER_AGENT, 
+				TestUtilMessageService.ISSUER_CONNECTOR, TestUtilMessageService.AFFECTED_CONNECOTR);
+		assertNotNull(msg);
+	}
+	
+	@Test
+	public void queryMessage() {
+		QueryMessage query = TestUtilMessageService.getQueryMessage(TestUtilMessageService.SENDER_AGENT, TestUtilMessageService.ISSUER_CONNECTOR, 
+				QueryLanguage.SPARQL);
+		assertNotNull(query);
 	}
 	
 	private void verifyFields(Message message) {

@@ -14,6 +14,10 @@ import de.fraunhofer.iais.eis.ArtifactRequestMessageBuilder;
 import de.fraunhofer.iais.eis.ArtifactResponseMessage;
 import de.fraunhofer.iais.eis.ArtifactResponseMessageBuilder;
 import de.fraunhofer.iais.eis.BinaryOperator;
+import de.fraunhofer.iais.eis.ConnectorUnavailableMessage;
+import de.fraunhofer.iais.eis.ConnectorUnavailableMessageBuilder;
+import de.fraunhofer.iais.eis.ConnectorUpdateMessage;
+import de.fraunhofer.iais.eis.ConnectorUpdateMessageBuilder;
 import de.fraunhofer.iais.eis.Constraint;
 import de.fraunhofer.iais.eis.ConstraintBuilder;
 import de.fraunhofer.iais.eis.ContractAgreement;
@@ -29,6 +33,9 @@ import de.fraunhofer.iais.eis.DynamicAttributeTokenBuilder;
 import de.fraunhofer.iais.eis.LeftOperand;
 import de.fraunhofer.iais.eis.Permission;
 import de.fraunhofer.iais.eis.PermissionBuilder;
+import de.fraunhofer.iais.eis.QueryLanguage;
+import de.fraunhofer.iais.eis.QueryMessage;
+import de.fraunhofer.iais.eis.QueryMessageBuilder;
 import de.fraunhofer.iais.eis.RejectionMessage;
 import de.fraunhofer.iais.eis.RejectionMessageBuilder;
 import de.fraunhofer.iais.eis.RejectionReason;
@@ -46,6 +53,7 @@ public class TestUtilMessageService {
 	public static URI ISSUER_CONNECTOR = URI.create("http://w3id.org/engrd/connector");
 	public static URI RECIPIENT_CONNECTOR = URI.create("http://w3id.org/engrd/connector/recipient");
 	public static URI SENDER_AGENT = URI.create("http://sender.agent/sender");
+	public static URI AFFECTED_CONNECOTR = URI.create("https://affected.connecotr");
 	
 	public static String MODEL_VERSION = "4.0.6";
 	
@@ -220,6 +228,40 @@ public class TestUtilMessageService {
 				._tokenFormat_(TokenFormat.JWT)
 				._tokenValue_(TOKEN_VALUE)
 				.build();		
+	}
+	
+	// Broker related messages
+	public static ConnectorUpdateMessage getConnectorUpdateMessage(URI senderAgent, URI issuerConnector, URI affectedConnector) {
+		return new ConnectorUpdateMessageBuilder()
+				._modelVersion_(MODEL_VERSION)
+				._issued_(ISSUED)
+				._senderAgent_(senderAgent)
+				._issuerConnector_(issuerConnector)
+				._affectedConnector_(affectedConnector)
+				._securityToken_(getDynamicAttributeToken())
+				.build();
+	}
+	
+	public static ConnectorUnavailableMessage getConnectorUnavailableMessage(URI senderAgent, URI issuerConnector, URI affectedConnector) {
+		return new ConnectorUnavailableMessageBuilder()
+				._modelVersion_(MODEL_VERSION)
+				._issued_(ISSUED)
+				._senderAgent_(senderAgent)
+				._issuerConnector_(issuerConnector)
+				._affectedConnector_(affectedConnector)
+				._securityToken_(getDynamicAttributeToken())
+				.build();
+	}
+	
+	public static QueryMessage getQueryMessage(URI senderAgent, URI issuerConnector, QueryLanguage queryLanguage) {
+		return new QueryMessageBuilder() 
+				._modelVersion_(MODEL_VERSION)
+				._issued_(ISSUED)
+				._senderAgent_(senderAgent)
+				._issuerConnector_(issuerConnector)
+				._queryLanguage_(queryLanguage)
+				._securityToken_(getDynamicAttributeToken())
+				.build();
 	}
 
 }
