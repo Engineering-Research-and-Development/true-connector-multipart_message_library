@@ -27,7 +27,7 @@
 	    <repository>
 	      <id>github</id>
 	      <name>GitHub Packages</name>
-	      <url>https://maven.pkg.github.com/Engineering-Research-and-Development/market4.0-ids_multipart_message_processor</url>
+	      <url>https://maven.pkg.github.com/Engineering-Research-and-Development/true-connector-multipart_message_library</url>
 	    </repository>
   	</distributionManagement>
 	
