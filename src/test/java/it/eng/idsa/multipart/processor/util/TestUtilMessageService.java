@@ -113,6 +113,23 @@ public class TestUtilMessageService {
 				.build();
 	}
 	
+	public static DescriptionRequestMessage getDescriptionRequestMessageWithoutRequestedElement() {
+		return new DescriptionRequestMessageBuilder()
+				._issued_(ISSUED)
+				._issuerConnector_(ISSUER_CONNECTOR)
+				._modelVersion_(MODEL_VERSION)
+				.build();
+	}
+	
+	public static DescriptionRequestMessage getDescriptionRequestMessageWithRequestedElement() {
+		return new DescriptionRequestMessageBuilder()
+				._issued_(ISSUED)
+				._issuerConnector_(ISSUER_CONNECTOR)
+				._modelVersion_(MODEL_VERSION)
+				._requestedElement_(URI.create("https://resource.com/11"))
+				.build();
+	}
+	
 	public static RejectionMessage getRejectionMessage() {
 		return new RejectionMessageBuilder()
 				._issuerConnector_(ISSUER_CONNECTOR)
