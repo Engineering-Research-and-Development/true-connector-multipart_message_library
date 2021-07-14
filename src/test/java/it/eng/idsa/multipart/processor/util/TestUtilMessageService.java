@@ -121,12 +121,12 @@ public class TestUtilMessageService {
 				.build();
 	}
 	
-	public static DescriptionRequestMessage getDescriptionRequestMessageWithRequestedElement() {
+	public static DescriptionRequestMessage getDescriptionRequestMessageWithRequestedElement(URI requestedElement) {
 		return new DescriptionRequestMessageBuilder()
 				._issued_(ISSUED)
 				._issuerConnector_(ISSUER_CONNECTOR)
 				._modelVersion_(MODEL_VERSION)
-				._requestedElement_(URI.create("https://resource.com/11"))
+				._requestedElement_(requestedElement)
 				.build();
 	}
 	
