@@ -113,15 +113,7 @@ public class TestUtilMessageService {
 				.build();
 	}
 	
-	public static DescriptionRequestMessage getDescriptionRequestMessageWithoutRequestedElement() {
-		return new DescriptionRequestMessageBuilder()
-				._issued_(ISSUED)
-				._issuerConnector_(ISSUER_CONNECTOR)
-				._modelVersion_(MODEL_VERSION)
-				.build();
-	}
-	
-	public static DescriptionRequestMessage getDescriptionRequestMessageWithRequestedElement(URI requestedElement) {
+	public static DescriptionRequestMessage getDescriptionRequestMessage(URI requestedElement) {
 		return new DescriptionRequestMessageBuilder()
 				._issued_(ISSUED)
 				._issuerConnector_(ISSUER_CONNECTOR)
