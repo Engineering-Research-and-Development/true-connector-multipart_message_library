@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import de.fraunhofer.iais.eis.Message;
 import it.eng.idsa.multipart.domain.MultipartMessage;
-import it.eng.idsa.multipart.util.TestUtilMessageService;
+import it.eng.idsa.multipart.processor.util.TestUtilMessageService;
 
 public class MultipartMessageProcessorFormTest {
 

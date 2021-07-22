@@ -19,8 +19,8 @@ import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.ids.jsonld.Serializer;
 import it.eng.idsa.multipart.builder.MultipartMessageBuilder;
 import it.eng.idsa.multipart.domain.MultipartMessage;
+import it.eng.idsa.multipart.processor.util.TestUtilMessageService;
 import it.eng.idsa.multipart.util.MultipartMessageKey;
-import it.eng.idsa.multipart.util.TestUtilMessageService;
 
 public class MultipartMessageProcessorTest {
 	

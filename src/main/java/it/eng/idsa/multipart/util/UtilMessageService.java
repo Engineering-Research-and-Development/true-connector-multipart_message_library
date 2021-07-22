@@ -44,7 +44,7 @@ import de.fraunhofer.iais.eis.util.RdfResource;
 import de.fraunhofer.iais.eis.util.Util;
 import it.eng.idsa.multipart.processor.MultipartMessageProcessor;
 
-public class TestUtilMessageService {
+public class UtilMessageService {
 
 	public static final String TOKEN_VALUE = "DummyTokenValue";
 
@@ -55,7 +55,7 @@ public class TestUtilMessageService {
 	public static URI SENDER_AGENT = URI.create("http://sender.agent/sender");
 	public static URI AFFECTED_CONNECOTR = URI.create("https://affected.connecotr");
 	
-	public static String MODEL_VERSION = "4.0.6";
+	public static String MODEL_VERSION = "4.1.1";
 	
 	public static URI CORRELATION_MESSAGE = URI.create("http://w3id.org/connectorUnavailableMessage/1a421b8c-3407-44a8-aeb9-253f145c869a");
 	public static URI TRANSFER_CONTRACT = URI.create("http://w3id.org/engrd/connector/examplecontract");
@@ -84,11 +84,11 @@ public class TestUtilMessageService {
 		return new ArtifactRequestMessageBuilder()
 				._issued_(ISSUED)
 				._correlationMessage_(CORRELATION_MESSAGE)
-//				._transferContract_(TRANSFER_CONTRACT)
+				._transferContract_(TRANSFER_CONTRACT)
 				._issuerConnector_(ISSUER_CONNECTOR)
-				._senderAgent_(SENDER_AGENT)
 				._modelVersion_(MODEL_VERSION)
 				._requestedArtifact_(REQUESTED_ARTIFACT)
+				._senderAgent_(SENDER_AGENT)
 				._securityToken_(getDynamicAttributeToken())
 				.build();
 	}
@@ -102,9 +102,11 @@ public class TestUtilMessageService {
 		return new ArtifactRequestMessageBuilder()
 				._issued_(ISSUED)
 				._correlationMessage_(CORRELATION_MESSAGE)
+				._transferContract_(TRANSFER_CONTRACT)
 				._issuerConnector_(ISSUER_CONNECTOR)
-				._senderAgent_(SENDER_AGENT)
 				._modelVersion_(MODEL_VERSION)
+				._requestedArtifact_(REQUESTED_ARTIFACT)
+				._senderAgent_(SENDER_AGENT)
 				._requestedArtifact_(requestedArtifact)
 				._securityToken_(getDynamicAttributeToken())
 				.build();
@@ -118,19 +120,21 @@ public class TestUtilMessageService {
 		return new ArtifactResponseMessageBuilder()
 				._issued_(ISSUED)
 				._correlationMessage_(CORRELATION_MESSAGE)
-//				._transferContract_(TRANSFER_CONTRACT)
+				._transferContract_(TRANSFER_CONTRACT)
 				._issuerConnector_(ISSUER_CONNECTOR)
-				._senderAgent_(SENDER_AGENT)
 				._modelVersion_(MODEL_VERSION)
+				._senderAgent_(SENDER_AGENT)
 				._securityToken_(getDynamicAttributeToken())
 				.build();
 	}
 	
 	public static RejectionMessage getRejectionMessage(RejectionReason rejectionReason) {
 		return new RejectionMessageBuilder()
+				._issuerConnector_(ISSUER_CONNECTOR)
 				._issued_(ISSUED)
-				._correlationMessage_(CORRELATION_MESSAGE)
 				._modelVersion_(MODEL_VERSION)
+				._transferContract_(TRANSFER_CONTRACT)
+				._correlationMessage_(CORRELATION_MESSAGE)
 				._rejectionReason_(rejectionReason)
 				._senderAgent_(SENDER_AGENT)
 				._issuerConnector_(ISSUER_CONNECTOR)
@@ -142,13 +146,14 @@ public class TestUtilMessageService {
 	 * Creates DescriptionRequestMessage
 	 * @return
 	 */
-	public static DescriptionRequestMessage getDescriptionRequestMessage() {
+	public static DescriptionRequestMessage getDescriptionRequestMessage(URI requestedElement) {
 		return new DescriptionRequestMessageBuilder()
 				._issued_(ISSUED)
 				._issuerConnector_(ISSUER_CONNECTOR)
 				._modelVersion_(MODEL_VERSION)
-				._senderAgent_(SENDER_AGENT)
 				._correlationMessage_(CORRELATION_MESSAGE)
+				._requestedElement_(requestedElement)
+				._senderAgent_(SENDER_AGENT)
 				._securityToken_(getDynamicAttributeToken())
 				.build();
 	}
