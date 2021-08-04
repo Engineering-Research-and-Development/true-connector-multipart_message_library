@@ -2,16 +2,21 @@ package it.eng.idsa.multipart.processor.util;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.io.IOException;
+import java.net.URI;
+
 import org.junit.jupiter.api.Test;
 
 import de.fraunhofer.iais.eis.ConnectorUnavailableMessage;
 import de.fraunhofer.iais.eis.ConnectorUpdateMessage;
 import de.fraunhofer.iais.eis.ContractAgreement;
+import de.fraunhofer.iais.eis.ContractRequest;
 import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.QueryLanguage;
 import de.fraunhofer.iais.eis.QueryMessage;
 import de.fraunhofer.iais.eis.RejectionMessage;
 import de.fraunhofer.iais.eis.RejectionReason;
+import de.fraunhofer.iais.eis.ids.jsonld.Serializer;
 import it.eng.idsa.multipart.util.UtilMessageService;
 
 /**
@@ -91,6 +96,12 @@ public class TestUtilMessageServiceTest {
 		QueryMessage query = UtilMessageService.getQueryMessage(UtilMessageService.SENDER_AGENT, UtilMessageService.ISSUER_CONNECTOR, 
 				QueryLanguage.SPARQL);
 		assertNotNull(query);
+	}
+	
+	@Test
+	public void contractRequest() {
+		ContractRequest cr = UtilMessageService.getContractRequest(URI.create("https://artifact.id"));
+		assertNotNull(cr);
 	}
 	
 	private void verifyFields(Message message) {

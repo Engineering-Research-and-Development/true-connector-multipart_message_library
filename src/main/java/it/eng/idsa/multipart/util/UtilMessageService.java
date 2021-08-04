@@ -24,6 +24,8 @@ import de.fraunhofer.iais.eis.ContractAgreement;
 import de.fraunhofer.iais.eis.ContractAgreementBuilder;
 import de.fraunhofer.iais.eis.ContractAgreementMessage;
 import de.fraunhofer.iais.eis.ContractAgreementMessageBuilder;
+import de.fraunhofer.iais.eis.ContractRequest;
+import de.fraunhofer.iais.eis.ContractRequestBuilder;
 import de.fraunhofer.iais.eis.ContractRequestMessage;
 import de.fraunhofer.iais.eis.ContractRequestMessageBuilder;
 import de.fraunhofer.iais.eis.DescriptionRequestMessage;
@@ -212,6 +214,17 @@ public class UtilMessageService {
 				._correlationMessage_(CORRELATION_MESSAGE)
 				._senderAgent_(SENDER_AGENT)
 				._securityToken_(getDynamicAttributeToken())
+				.build();
+	}
+	
+	public static ContractRequest getContractRequest(URI requestedArtifact) {
+		return new ContractRequestBuilder()
+				._provider_(URI.create("https://provider.com"))
+				._consumer_(URI.create("https://consumer.com"))
+				._permission_(new PermissionBuilder()
+						._action_(Action.USE)
+						._target_(requestedArtifact)
+						.build())
 				.build();
 	}
 	
