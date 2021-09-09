@@ -55,7 +55,7 @@ public class UtilMessageService {
 	public static URI ISSUER_CONNECTOR = URI.create("http://w3id.org/engrd/connector");
 	public static URI RECIPIENT_CONNECTOR = URI.create("http://w3id.org/engrd/connector/recipient");
 	public static URI SENDER_AGENT = URI.create("http://sender.agent/sender");
-	public static URI AFFECTED_CONNECOTR = URI.create("https://affected.connecotr");
+	public static URI AFFECTED_CONNECTOR = URI.create("https://affected.connector");
 	
 	public static String MODEL_VERSION = "4.1.0";
 	

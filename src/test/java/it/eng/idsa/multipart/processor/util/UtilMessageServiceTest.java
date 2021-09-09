@@ -25,7 +25,7 @@ import it.eng.idsa.multipart.util.UtilMessageService;
  * @author igor.balog
  *
  */
-public class TestUtilMessageServiceTest {
+public class UtilMessageServiceTest {
 	
 	@Test 
 	public void artifactRequestMessage() {
@@ -80,14 +80,14 @@ public class TestUtilMessageServiceTest {
 	@Test
 	public void connectorUpdateMessage() {
 		ConnectorUpdateMessage msg = UtilMessageService.getConnectorUpdateMessage(UtilMessageService.SENDER_AGENT, 
-				UtilMessageService.ISSUER_CONNECTOR, UtilMessageService.AFFECTED_CONNECOTR);
+				UtilMessageService.ISSUER_CONNECTOR, UtilMessageService.AFFECTED_CONNECTOR);
 		assertNotNull(msg);
 	}
 	
 	@Test
 	public void connectorUnavailableMessage() {
 		ConnectorUnavailableMessage msg = UtilMessageService.getConnectorUnavailableMessage(UtilMessageService.SENDER_AGENT, 
-				UtilMessageService.ISSUER_CONNECTOR, UtilMessageService.AFFECTED_CONNECOTR);
+				UtilMessageService.ISSUER_CONNECTOR, UtilMessageService.AFFECTED_CONNECTOR);
 		assertNotNull(msg);
 	}
 	
