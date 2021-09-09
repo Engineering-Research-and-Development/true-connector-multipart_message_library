@@ -43,6 +43,7 @@ import de.fraunhofer.iais.eis.RejectionMessageBuilder;
 import de.fraunhofer.iais.eis.RejectionReason;
 import de.fraunhofer.iais.eis.TokenFormat;
 import de.fraunhofer.iais.eis.util.RdfResource;
+import de.fraunhofer.iais.eis.util.TypedLiteral;
 import de.fraunhofer.iais.eis.util.Util;
 import it.eng.idsa.multipart.processor.MultipartMessageProcessor;
 
@@ -59,7 +60,7 @@ public class UtilMessageService {
 	
 	public static String MODEL_VERSION = "4.1.0";
 	
-	public static URI CORRELATION_MESSAGE = URI.create("http://w3id.org/connectorUnavailableMessage/1a421b8c-3407-44a8-aeb9-253f145c869a");
+	public static URI CORRELATION_MESSAGE = URI.create("http://w3id.org/artifactRequestMessage/1a421b8c-3407-44a8-aeb9-253f145c869a");
 	public static URI TRANSFER_CONTRACT = URI.create("http://w3id.org/engrd/connector/examplecontract");
 	
 	public static XMLGregorianCalendar ISSUED;
@@ -224,6 +225,11 @@ public class UtilMessageService {
 				._permission_(new PermissionBuilder()
 						._action_(Action.USE)
 						._target_(requestedArtifact)
+						._constraint_(new ConstraintBuilder()
+								._leftOperand_(LeftOperand.POLICY_EVALUATION_TIME)
+								._operator_(BinaryOperator.AFTER)
+								._rightOperand_(new TypedLiteral("2021-06-15T00:00:00Z", URI.create("xsd:datetimeStamp")))
+								.build())
 						.build())
 				.build();
 	}
