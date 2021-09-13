@@ -1,13 +1,16 @@
 package it.eng.idsa.multipart.processor;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
 import de.fraunhofer.iais.eis.ArtifactRequestMessage;
+import it.eng.idsa.multipart.builder.MultipartMessageBuilder;
 import it.eng.idsa.multipart.domain.MultipartMessage;
 import it.eng.idsa.multipart.processor.util.TestUtilMessageService;
+import it.eng.idsa.multipart.util.UtilMessageService;
 
 public class MultipartMessageProcessorMixedTest {
 
@@ -52,5 +55,27 @@ public class MultipartMessageProcessorMixedTest {
 		assertNotNull(multipartMessage);
 		assertNotNull(multipartMessage.getHeaderContent());
 		assertTrue(multipartMessage.getHeaderContent() instanceof ArtifactRequestMessage);
+	}
+	
+	@Test
+	public void multipartMessageToString_ldJson() {
+		MultipartMessage multipartMessage = new MultipartMessageBuilder()
+				.withHeaderContent(UtilMessageService.getArtifactRequestMessage())
+				.withPayloadContent("Payload used for testing")
+				.build();
+		String mixed = MultipartMessageProcessor.multipartMessagetoString(multipartMessage, false, Boolean.TRUE);
+		assertTrue(mixed.contains("Content-Type: application/ld+json"));
+	}
+	
+	@Test
+	public void multipartMessageToString_justJson() {
+		MultipartMessage multipartMessage = new MultipartMessageBuilder()
+				.withHeaderContent(UtilMessageService.getArtifactRequestMessage())
+				.withPayloadContent("Payload used for testing")
+				.build();
+		String mixed = MultipartMessageProcessor.multipartMessagetoString(multipartMessage, false, Boolean.FALSE);
+		assertFalse(mixed.contains("ld+json"));
+		assertTrue(mixed.contains("Content-Type: application/json; charset=UTF-8"));
+
 	}
 }
