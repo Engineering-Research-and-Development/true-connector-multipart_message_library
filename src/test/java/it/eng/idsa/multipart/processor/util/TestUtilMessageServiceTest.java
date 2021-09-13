@@ -78,6 +78,12 @@ public class TestUtilMessageServiceTest {
 	}
 	
 	@Test
+	public void igor() {
+		ContractRequest cr = UtilMessageService.getContractRequest(URI.create("https://requestid.com"));
+		System.out.println(UtilMessageService.getMessageAsString(cr));
+	}
+	
+	@Test
 	public void connectorUpdateMessage() {
 		ConnectorUpdateMessage msg = UtilMessageService.getConnectorUpdateMessage(UtilMessageService.SENDER_AGENT, 
 				UtilMessageService.ISSUER_CONNECTOR, UtilMessageService.AFFECTED_CONNECOTR);

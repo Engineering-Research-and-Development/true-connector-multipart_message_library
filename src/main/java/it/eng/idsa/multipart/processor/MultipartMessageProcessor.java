@@ -113,7 +113,7 @@ public class MultipartMessageProcessor {
      * Converts multipart message to string
      * @param message to be converted to string
      * @param includeHttpHeaders if present, overriding default ones
-     * @param includeJsonLd if true - content type is application/json+ld</br>if false - ContentType=application/json; charset=UTF-8</br> if null - Content-Type is not present
+     * @param includeJsonLd if true - content type is application/ld+json</br>if false - ContentType=application/json; charset=UTF-8</br> if null - Content-Type is not present
      * @return
      */
     public static String multipartMessagetoString(MultipartMessage message, boolean includeHttpHeaders, Boolean includeJsonLd) {
@@ -231,7 +231,7 @@ public class MultipartMessageProcessor {
         defaultHeaderHeaderString.append(DEFAULT_CONTENT_DISPOSITION + "\"" + partName + "\"" + System.lineSeparator());
         defaultHeaderHeaderString.append(MultipartMessageKey.CONTENT_LENGTH.label + ": " + headerContentString.length() + System.lineSeparator());
         if(includeJsonLD != null && includeJsonLD) {
-        	defaultHeaderHeaderString.append(MultipartMessageKey.CONTENT_TYPE.label + ": " + "application/json+ld" + System.lineSeparator());
+        	defaultHeaderHeaderString.append(MultipartMessageKey.CONTENT_TYPE.label + ": " + "application/ld+json" + System.lineSeparator());
         } else if(includeJsonLD != null && !includeJsonLD){
         	defaultHeaderHeaderString.append(MultipartMessageKey.CONTENT_TYPE.label + ": " + ContentType.APPLICATION_JSON + System.lineSeparator());
         }
