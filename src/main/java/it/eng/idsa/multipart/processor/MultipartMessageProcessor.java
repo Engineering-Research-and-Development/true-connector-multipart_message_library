@@ -231,7 +231,7 @@ public class MultipartMessageProcessor {
         defaultHeaderHeaderString.append(DEFAULT_CONTENT_DISPOSITION + "\"" + partName + "\"" + System.lineSeparator());
         defaultHeaderHeaderString.append(MultipartMessageKey.CONTENT_LENGTH.label + ": " + headerContentString.length() + System.lineSeparator());
         if(includeJsonLD != null && includeJsonLD) {
-        	defaultHeaderHeaderString.append(MultipartMessageKey.CONTENT_TYPE.label + ": " + "application/json+ld" + System.lineSeparator());
+        	defaultHeaderHeaderString.append(MultipartMessageKey.CONTENT_TYPE.label + ": " + "application/ld+json" + System.lineSeparator());
         } else if(includeJsonLD != null && !includeJsonLD){
         	defaultHeaderHeaderString.append(MultipartMessageKey.CONTENT_TYPE.label + ": " + ContentType.APPLICATION_JSON + System.lineSeparator());
         }
