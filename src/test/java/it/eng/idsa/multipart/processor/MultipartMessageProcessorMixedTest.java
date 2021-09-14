@@ -1,8 +1,8 @@
 package it.eng.idsa.multipart.processor;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -76,6 +76,6 @@ public class MultipartMessageProcessorMixedTest {
 		String mixed = MultipartMessageProcessor.multipartMessagetoString(multipartMessage, false, Boolean.FALSE);
 		assertFalse(mixed.contains("ld+json"));
 		assertTrue(mixed.contains("Content-Type: application/json; charset=UTF-8"));
-
 	}
+	
 }
