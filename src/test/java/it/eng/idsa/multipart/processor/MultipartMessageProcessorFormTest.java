@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import de.fraunhofer.iais.eis.Message;
 import it.eng.idsa.multipart.domain.MultipartMessage;
-import it.eng.idsa.multipart.processor.util.TestUtilMessageService;
+import it.eng.idsa.multipart.util.UtilMessageService;
 
 public class MultipartMessageProcessorFormTest {
 
@@ -33,8 +33,8 @@ public class MultipartMessageProcessorFormTest {
 			"{\"firstName\":\"John\",\"lastName\":\"Doe\",\"address\":\"591  Franklin Street, Pennsylvania\",\"checksum\":\"ABC123 2020/12/24 09:29:56\",\"dateOfBirth\":\"2020/12/24 09:29:56\"}\r\n" + 
 			"--sLo6Ma1Cpd6T5nUnbBQqJvCMjswOqVt6vypl5---";
 	
-	Message message = TestUtilMessageService.getArtifactRequestMessage();
-	String messageAsString = header + TestUtilMessageService.getMessageAsString(message) + footer;
+	Message message = UtilMessageService.getArtifactRequestMessage();
+	String messageAsString = header + UtilMessageService.getMessageAsString(message) + footer;
 	
 	String contentType = "application/json; charset=UTF-8";
 	String contentTransferEncoding = "8bit";

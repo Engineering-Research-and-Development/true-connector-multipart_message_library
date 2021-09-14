@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import de.fraunhofer.iais.eis.ArtifactRequestMessage;
 import it.eng.idsa.multipart.builder.MultipartMessageBuilder;
 import it.eng.idsa.multipart.domain.MultipartMessage;
-import it.eng.idsa.multipart.processor.util.TestUtilMessageService;
 import it.eng.idsa.multipart.util.UtilMessageService;
 
 public class MultipartMessageProcessorMixedTest {
@@ -21,7 +20,7 @@ public class MultipartMessageProcessorMixedTest {
 				"Content-Type: application/json; charset=UTF-8\r\n" + 
 				"Content-Length: 333\r\n" + 
 				"\r\n" + 
-				TestUtilMessageService.getMessageAsString(TestUtilMessageService.getArtifactRequestMessage()) +
+				UtilMessageService.getMessageAsString(UtilMessageService.getArtifactRequestMessage()) +
 				"\r\n" + 
 				"--CQWZRdCCXr5aIuonjmRXF-QzcZ2Kyi4Dkn6\r\n" + 
 				"Content-Disposition: form-data; name=\"payload\"\r\n" + 
@@ -42,7 +41,7 @@ public class MultipartMessageProcessorMixedTest {
 				" Content-Disposition: form-data; name=\"header\"\r\n" + 
 				" Content-Length: 1541\r\n" + 
 				"\r\n" + 
-				TestUtilMessageService.getMessageAsString(TestUtilMessageService.getArtifactRequestMessage()) +
+				UtilMessageService.getMessageAsString(UtilMessageService.getArtifactRequestMessage()) +
 				"\r\n" + 
 				"--W1naK2mLGlKwfavaz4xfARez2cdRVM1\r\n" + 
 				" Content-Disposition: form-data; name=\"payload\"\r\n" + 

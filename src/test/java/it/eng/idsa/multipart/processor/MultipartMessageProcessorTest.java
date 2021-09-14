@@ -19,12 +19,12 @@ import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.ids.jsonld.Serializer;
 import it.eng.idsa.multipart.builder.MultipartMessageBuilder;
 import it.eng.idsa.multipart.domain.MultipartMessage;
-import it.eng.idsa.multipart.processor.util.TestUtilMessageService;
 import it.eng.idsa.multipart.util.MultipartMessageKey;
+import it.eng.idsa.multipart.util.UtilMessageService;
 
 public class MultipartMessageProcessorTest {
 	
-	private static Message ARTIFACT_REQUEST_MESSAGE = TestUtilMessageService.getArtifactRequestMessage();
+	private static Message ARTIFACT_REQUEST_MESSAGE = UtilMessageService.getArtifactRequestMessage();
 	
 	private Map<String, String> expectedHttpHeader  = new HashMap<String, String>() {
 		private static final long serialVersionUID = 6644844396388888064L;
@@ -33,7 +33,7 @@ public class MultipartMessageProcessorTest {
 	    put(MultipartMessageKey.FORWARD_TO.label, "Forward-To: broker");
 	}}; 
 	
-	private String expectedHeaderContentString = TestUtilMessageService.getMessageAsString(ARTIFACT_REQUEST_MESSAGE);
+	private String expectedHeaderContentString = UtilMessageService.getMessageAsString(ARTIFACT_REQUEST_MESSAGE);
 	private String expectedPayloadContentString = "{\"catalog.offers.0.resourceEndpoints.path\":\"/pet\"}";
 	private String expectedSignatureContentString = "{\"signature.resourceEndpoints.path\":\"/signature\"}";
 	
@@ -73,7 +73,7 @@ public class MultipartMessageProcessorTest {
 						"--CQWZRdCCXr5aIuonjmRXF-QzcZ2Kyi4Dkn6\r\n" + 
 						"Content-Disposition: form-data; name=\"header\"\r\n" + 
 						"Content-Length: 534\r\n")
-						.append(TestUtilMessageService.getMessageAsString(ARTIFACT_REQUEST_MESSAGE))
+						.append(UtilMessageService.getMessageAsString(ARTIFACT_REQUEST_MESSAGE))
 						.append("\r\n")
 						.append("--CQWZRdCCXr5aIuonjmRXF-QzcZ2Kyi4Dkn6\r\n")
 						.append("Content-Disposition: form-data; name=\"payload\"\r\n" + 
@@ -176,7 +176,7 @@ public class MultipartMessageProcessorTest {
 		String expectedHeader = "Content-Disposition: form-data; name=\"header\"" + System.lineSeparator() +
 				"Content-Length: 534" + System.lineSeparator() + 
 				"" + System.lineSeparator() + 
-				TestUtilMessageService.getMessageAsString(ARTIFACT_REQUEST_MESSAGE)
+				UtilMessageService.getMessageAsString(ARTIFACT_REQUEST_MESSAGE)
 				+ System.lineSeparator() + 
 				"";
 		String expectedPayload = "Content-Disposition: form-data; name=\"payload\"" + System.lineSeparator() +  
@@ -239,7 +239,7 @@ public class MultipartMessageProcessorTest {
 		String expectedHeader = "Content-Disposition: form-data; name=\"header\"" + System.lineSeparator() +
 				"Content-Length: 534" + System.lineSeparator() + 
 				"" + System.lineSeparator() + 
-				TestUtilMessageService.getMessageAsString(ARTIFACT_REQUEST_MESSAGE)
+				UtilMessageService.getMessageAsString(ARTIFACT_REQUEST_MESSAGE)
 				 + System.lineSeparator() + 
 				"";
 		String expectedPayload = "Content-Disposition: form-data; name=\"payload\"" + System.lineSeparator() +  

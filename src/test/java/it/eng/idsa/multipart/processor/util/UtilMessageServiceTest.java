@@ -2,7 +2,6 @@ package it.eng.idsa.multipart.processor.util;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.io.IOException;
 import java.net.URI;
 
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,6 @@ import de.fraunhofer.iais.eis.QueryLanguage;
 import de.fraunhofer.iais.eis.QueryMessage;
 import de.fraunhofer.iais.eis.RejectionMessage;
 import de.fraunhofer.iais.eis.RejectionReason;
-import de.fraunhofer.iais.eis.ids.jsonld.Serializer;
 import it.eng.idsa.multipart.util.UtilMessageService;
 
 /**
