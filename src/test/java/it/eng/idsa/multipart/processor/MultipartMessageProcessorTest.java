@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,17 +14,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import de.fraunhofer.iais.eis.ArtifactResponseMessage;
+import de.fraunhofer.iais.eis.ArtifactRequestMessage;
 import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.ids.jsonld.Serializer;
 import it.eng.idsa.multipart.builder.MultipartMessageBuilder;
 import it.eng.idsa.multipart.domain.MultipartMessage;
 import it.eng.idsa.multipart.util.MultipartMessageKey;
+import it.eng.idsa.multipart.util.UtilMessageService;
 
 public class MultipartMessageProcessorTest {
 	
-	private String RESOURCE_MESSAGE_PATH = "./src/test/resources/message/";
-	private String MULTIPART_MESSAGE_NAME = "IDS-multipart.txt";
+	private static Message ARTIFACT_REQUEST_MESSAGE = UtilMessageService.getArtifactRequestMessage();
 	
 	private Map<String, String> expectedHttpHeader  = new HashMap<String, String>() {
 		private static final long serialVersionUID = 6644844396388888064L;
@@ -35,15 +33,7 @@ public class MultipartMessageProcessorTest {
 	    put(MultipartMessageKey.FORWARD_TO.label, "Forward-To: broker");
 	}}; 
 	
-	private String expectedHeaderContentString = "{"  + System.lineSeparator() +
-			"  \"@type\" : \"ids:ArtifactResponseMessage\"," + System.lineSeparator() + 
-			"  \"issued\" : \"2019-05-27T13:09:42.306Z\"," + System.lineSeparator() +
-			"  \"issuerConnector\" : \"http://iais.fraunhofer.de/ids/mdm-connector\"," + System.lineSeparator() +
-			"  \"correlationMessage\" : \"http://industrialdataspace.org/connectorUnavailableMessage/1a421b8c-3407-44a8-aeb9-253f145c869a\","  + System.lineSeparator() +  
-			"  \"transferContract\" : \"https://mdm-connector.ids.isst.fraunhofer.de/examplecontract/bab-bayern-sample/\","  + System.lineSeparator() +
-			"  \"modelVersion\" : \"1.0.2-SNAPSHOT\"," + System.lineSeparator() + 
-			"  \"@id\" : \"https://w3id.org/idsa/autogen/artifactResponseMessage/eb3ab487-dfb0-4d18-b39a-585514dd044f\"" + System.lineSeparator() +  
-			"}";
+	private String expectedHeaderContentString = UtilMessageService.getMessageAsString(ARTIFACT_REQUEST_MESSAGE);
 	private String expectedPayloadContentString = "{\"catalog.offers.0.resourceEndpoints.path\":\"/pet\"}";
 	private String expectedSignatureContentString = "{\"signature.resourceEndpoints.path\":\"/signature\"}";
 	
@@ -70,12 +60,33 @@ public class MultipartMessageProcessorTest {
 	
 	
 	private String multipartMessageString;
-	
 	private MultipartMessage expectedMultipartMessage;
 
 	@BeforeEach
     public void init() throws IOException {
-		multipartMessageString = new String(Files.readAllBytes(Paths.get(RESOURCE_MESSAGE_PATH + MULTIPART_MESSAGE_NAME)));
+		multipartMessageString = new StringBuilder()
+				.append("POST /idscp_out HTTP/1.1\r\n" + 
+						"Host: core-container:8080\r\n" + 
+						"Content-Type: multipart/mixed; boundary=CQWZRdCCXr5aIuonjmRXF-QzcZ2Kyi4Dkn6;charset=UTF-8\r\n" + 
+						"Forward-To: broker\r\n" + 
+						"\r\n" + 
+						"--CQWZRdCCXr5aIuonjmRXF-QzcZ2Kyi4Dkn6\r\n" + 
+						"Content-Disposition: form-data; name=\"header\"\r\n" + 
+						"Content-Length: 534\r\n")
+						.append(UtilMessageService.getMessageAsString(ARTIFACT_REQUEST_MESSAGE))
+						.append("\r\n")
+						.append("--CQWZRdCCXr5aIuonjmRXF-QzcZ2Kyi4Dkn6\r\n")
+						.append("Content-Disposition: form-data; name=\"payload\"\r\n" + 
+								"Content-Length: 50\r\n" + 
+								"\r\n" + 
+								"{\"catalog.offers.0.resourceEndpoints.path\":\"/pet\"}\r\n")
+						.append("--CQWZRdCCXr5aIuonjmRXF-QzcZ2Kyi4Dkn6\r\n")
+						.append("Content-Disposition: form-data; name=\"signature\"\r\n" + 
+								"Content-Length: 49\r\n" + 
+								"\r\n" + 
+								"{\"signature.resourceEndpoints.path\":\"/signature\"}\r\n")
+						.append("--CQWZRdCCXr5aIuonjmRXF-QzcZ2Kyi4Dkn6\r\n")
+				.toString();
 		expectedMultipartMessage = new MultipartMessageBuilder()
 															.withHttpHeader(expectedHttpHeader)
 															.withHeaderHeader(expectedHeaderHeader)
@@ -165,16 +176,8 @@ public class MultipartMessageProcessorTest {
 		String expectedHeader = "Content-Disposition: form-data; name=\"header\"" + System.lineSeparator() +
 				"Content-Length: 534" + System.lineSeparator() + 
 				"" + System.lineSeparator() + 
-				"{" + System.lineSeparator() + 
-				"  \"@context\" : \"https://w3id.org/idsa/contexts/2.1.0/context.jsonld\"," + System.lineSeparator() + 
-				"  \"@type\" : \"ids:ArtifactResponseMessage\"," + System.lineSeparator() + 
-				"  \"correlationMessage\" : \"http://industrialdataspace.org/connectorUnavailableMessage/1a421b8c-3407-44a8-aeb9-253f145c869a\"," + System.lineSeparator() + 
-				"  \"transferContract\" : \"https://mdm-connector.ids.isst.fraunhofer.de/examplecontract/bab-bayern-sample/\"," + System.lineSeparator() + 
-				"  \"issuerConnector\" : \"http://iais.fraunhofer.de/ids/mdm-connector\"," + System.lineSeparator() + 
-				"  \"modelVersion\" : \"1.0.2-SNAPSHOT\"," + System.lineSeparator() + 
-				"  \"issued\" : \"2019-05-27T13:09:42.306Z\"," + System.lineSeparator() + 
-				"  \"@id\" : \"https://w3id.org/idsa/autogen/artifactResponseMessage/eb3ab487-dfb0-4d18-b39a-585514dd044f\"" + System.lineSeparator() + 
-				"}" + System.lineSeparator() + 
+				UtilMessageService.getMessageAsString(ARTIFACT_REQUEST_MESSAGE)
+				+ System.lineSeparator() + 
 				"";
 		String expectedPayload = "Content-Disposition: form-data; name=\"payload\"" + System.lineSeparator() +  
 				"Content-Length: 50" + System.lineSeparator() +  
@@ -236,16 +239,8 @@ public class MultipartMessageProcessorTest {
 		String expectedHeader = "Content-Disposition: form-data; name=\"header\"" + System.lineSeparator() +
 				"Content-Length: 534" + System.lineSeparator() + 
 				"" + System.lineSeparator() + 
-				"{" + System.lineSeparator() + 
-				"  \"@context\" : \"https://w3id.org/idsa/contexts/2.1.0/context.jsonld\"," + System.lineSeparator() + 
-				"  \"@type\" : \"ids:ArtifactResponseMessage\"," + System.lineSeparator() + 
-				"  \"correlationMessage\" : \"http://industrialdataspace.org/connectorUnavailableMessage/1a421b8c-3407-44a8-aeb9-253f145c869a\"," + System.lineSeparator() + 
-				"  \"transferContract\" : \"https://mdm-connector.ids.isst.fraunhofer.de/examplecontract/bab-bayern-sample/\"," + System.lineSeparator() + 
-				"  \"issuerConnector\" : \"http://iais.fraunhofer.de/ids/mdm-connector\"," + System.lineSeparator() + 
-				"  \"modelVersion\" : \"1.0.2-SNAPSHOT\"," + System.lineSeparator() + 
-				"  \"issued\" : \"2019-05-27T13:09:42.306Z\"," + System.lineSeparator() + 
-				"  \"@id\" : \"https://w3id.org/idsa/autogen/artifactResponseMessage/eb3ab487-dfb0-4d18-b39a-585514dd044f\"" + System.lineSeparator() + 
-				"}" + System.lineSeparator() + 
+				UtilMessageService.getMessageAsString(ARTIFACT_REQUEST_MESSAGE)
+				 + System.lineSeparator() + 
 				"";
 		String expectedPayload = "Content-Disposition: form-data; name=\"payload\"" + System.lineSeparator() +  
 				"Content-Length: 50" + System.lineSeparator() +  
@@ -293,7 +288,7 @@ public class MultipartMessageProcessorTest {
 		sbResultHeaderMessage.delete(0, sbResultHeaderMessage.indexOf("\n") + 1);
 		Message resultHeaderMessage = new Serializer().deserialize(sbResultHeaderMessage.toString(), Message.class);
 
-		assertTrue(resultHeaderMessage instanceof ArtifactResponseMessage);
+		assertTrue(resultHeaderMessage instanceof ArtifactRequestMessage);
 		assertEquals(expectedHeaderMessage.getId(), resultHeaderMessage.getId());
 		assertEquals(expectedHeaderMessage.getModelVersion(), resultHeaderMessage.getModelVersion());
 		assertEquals(expectedHeaderMessage.getIssued(), resultHeaderMessage.getIssued());

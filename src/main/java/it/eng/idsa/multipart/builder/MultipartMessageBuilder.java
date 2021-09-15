@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.fraunhofer.iais.eis.Message;
-import de.fraunhofer.iais.eis.NotificationMessage;
 import de.fraunhofer.iais.eis.ids.jsonld.Serializer;
 import it.eng.idsa.multipart.domain.MultipartMessage;
 
@@ -60,18 +59,7 @@ public class MultipartMessageBuilder {
 		try {
 			this.headerContent = new Serializer().deserialize(headerContent, Message.class);
 		} catch (IOException e) {
-			logger.error("Could not deserialize header");
-			e.printStackTrace();
-		}
-
-		// TODO: Check is this if necessary
-		if (this.headerContent == null) {
-			try {
-				this.headerContent = new Serializer().deserialize(headerContent, NotificationMessage.class);
-			} catch (IOException e) {
-				logger.error("Could not deserialize header");
-				e.printStackTrace();
-			}
+			logger.error("Could not deserialize header {}", e.getLocalizedMessage());
 		}
 		return this;
 	}

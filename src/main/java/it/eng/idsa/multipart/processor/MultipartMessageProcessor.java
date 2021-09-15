@@ -113,7 +113,7 @@ public class MultipartMessageProcessor {
      * Converts multipart message to string
      * @param message to be converted to string
      * @param includeHttpHeaders if present, overriding default ones
-     * @param includeJsonLd if true - content type is application/json+ld</br>if false - ContentType=application/json; charset=UTF-8</br> if null - Content-Type is not present
+     * @param includeJsonLd if true - content type is application/ld+json</br>if false - ContentType=application/json; charset=UTF-8</br> if null - Content-Type is not present
      * @return
      */
     public static String multipartMessagetoString(MultipartMessage message, boolean includeHttpHeaders, Boolean includeJsonLd) {

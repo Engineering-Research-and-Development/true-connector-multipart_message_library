@@ -6,9 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import de.fraunhofer.iais.eis.ArtifactRequestMessage;
 import it.eng.idsa.multipart.builder.MultipartMessageBuilder;
 import it.eng.idsa.multipart.domain.MultipartMessage;
-import it.eng.idsa.multipart.processor.util.TestUtilMessageService;
+import it.eng.idsa.multipart.util.UtilMessageService;
 
 public class MultipartMessageProcessorMixedTest {
 
@@ -19,13 +20,8 @@ public class MultipartMessageProcessorMixedTest {
 				"Content-Type: application/json; charset=UTF-8\r\n" + 
 				"Content-Length: 333\r\n" + 
 				"\r\n" + 
-				"{\r\n" + 
-				"  \"@type\" : \"ids:ArtifactResponseMessage\",\r\n" + 
-				"  \"issued\" : \"2021-04-08T13:09:42.306Z\",\r\n" + 
-				"  \"issuerConnector\" : \"http://true-connector/\",\r\n" + 
-				"  \"modelVersion\" : \"4.0.0\",\r\n" + 
-				"  \"@id\" : \"https://w3id.org/idsa/autogen/artifactResponseMessage/eb3ab487-dfb0-4d18-b39a-585514dd044f\"\r\n" + 
-				"}\r\n" + 
+				UtilMessageService.getMessageAsString(UtilMessageService.getArtifactRequestMessage()) +
+				"\r\n" + 
 				"--CQWZRdCCXr5aIuonjmRXF-QzcZ2Kyi4Dkn6\r\n" + 
 				"Content-Disposition: form-data; name=\"payload\"\r\n" + 
 				"Content-Length: 50\r\n" + 
@@ -34,6 +30,8 @@ public class MultipartMessageProcessorMixedTest {
 				"--CQWZRdCCXr5aIuonjmRXF-QzcZ2Kyi4Dkn6--";
 		MultipartMessage multipartMessage = MultipartMessageProcessor.parseMultipartMessage(messageAsString);
 		assertNotNull(multipartMessage);
+		assertNotNull(multipartMessage.getHeaderContent());
+		assertTrue(multipartMessage.getHeaderContent() instanceof ArtifactRequestMessage);
 	}
 	
 	@Test
@@ -43,28 +41,8 @@ public class MultipartMessageProcessorMixedTest {
 				" Content-Disposition: form-data; name=\"header\"\r\n" + 
 				" Content-Length: 1541\r\n" + 
 				"\r\n" + 
-				" {\r\n" + 
-				"   \"authorizationToken\" : {\r\n" + 
-				"     \"@type\" : \"ids:Token\",\r\n" + 
-				"     \"@id\" : \"https://w3id.org/idsa/autogen/token/11b37e38-6877-4731-9966-a80f8f37de44\",\r\n" + 
-				"     \"tokenFormat\" : {\r\n" + 
-				"       \"@id\" : \"https://w3id.org/idsa/code/JWT\"\r\n" + 
-				"     },\r\n" + 
-				"     \"tokenValue\" : \"eyJ0eXAiOiJKV1QiLCJraWQiOiJkZWZhdWx0IiwiYWxnIjoiUlMyNTYifQ.eyJzY29wZXMiOltdLCJhdWQiOiJJRFNfQ29ubmVjdG9yIiwiaXNzIjoiaHR0cHM6Ly9kYXBzLmFpc2VjLmZyYXVuaG9mZXIuZGUiLCJzdWIiOiJDPUlULE89RW5naW5lZXJpbmcsT1U9UkQsQ049NGM0OTc3N2QtNDcxOC00ZDVjLTlhZmUtMTA1Nzg0OWMxMjU2IiwibmJmIjoxNjE3ODY4ODY3LCJleHAiOjE2MTc4NzI0Njd9.owfBcrYddGkhC3lqlyx-xzR1kkALkFaZe56EsgV5jN-L8QHkoME8loZsztxGsAiUXclgRPXzLhAUtTzcUV332FLcdSwxqigv1oelI8hn8Rf8WDW7hZyNyvowSb5AbeXOKbf2b--_9ke17o-1SfiKGjia7_6-dsJ4GPPX1dWPmzfaqXcMF6T9qIj3DLKVJlVvowKOsECTCtG33LaHAXZHWstLq2bv75Xr0iedBWpaoRLhhk6mGCmKPQaWvCd6bfL51nkWi4rL5oSn7rAIE6dKQwHD1elsXASGzN3X_ufmm1FjRoGxz9KVzDsK5sfdXboxrwopMxZFFGR-a-JwIpVtJg\"\r\n" + 
-				"   },\r\n" + 
-				"   \"recipientConnector\" : [ \"https://execution-core-container-seller:8889/data\" ],\r\n" + 
-				"   \"operationParameterization\" : {\r\n" + 
-				"     \"@type\" : \"ids:ParameterAssignment\",\r\n" + 
-				"     \"parameter\" : \"https://ids.tno.nl/HTTP\",\r\n" + 
-				"     \"@id\" : \"https://w3id.org/idsa/autogen/parameterAssignment/9bd282bf-1770-4e2d-8806-7369d122d3dc\"\r\n" + 
-				"   },\r\n" + 
-				"   \"issuerConnector\" : \"http://market40.eu/Connector/SCSN-Buyer\",\r\n" + 
-				"   \"@type\" : \"ids:InvokeOperationMessage\",\r\n" + 
-				"   \"modelVersion\" : \"2.0.0\",\r\n" + 
-				"   \"operationReference\" : \"https://ids.tno.nl/openapi/order\",\r\n" + 
-				"   \"@id\" : \"https://w3id.org/idsa/autogen/invokeOperationMessage/661a0392-cad3-4e76-bafa-b89adfe999c2\",\r\n" + 
-				"   \"issued\" : \"2021-04-08T08:01:05.334Z\"\r\n" + 
-				" }\r\n" + 
+				UtilMessageService.getMessageAsString(UtilMessageService.getArtifactRequestMessage()) +
+				"\r\n" + 
 				"--W1naK2mLGlKwfavaz4xfARez2cdRVM1\r\n" + 
 				" Content-Disposition: form-data; name=\"payload\"\r\n" + 
 				" Content-Length: 6310\r\n" + 
@@ -74,12 +52,14 @@ public class MultipartMessageProcessorMixedTest {
 		
 		MultipartMessage multipartMessage = MultipartMessageProcessor.parseMultipartMessage(messageAsString);
 		assertNotNull(multipartMessage);
+		assertNotNull(multipartMessage.getHeaderContent());
+		assertTrue(multipartMessage.getHeaderContent() instanceof ArtifactRequestMessage);
 	}
 	
 	@Test
 	public void multipartMessageToString_ldJson() {
 		MultipartMessage multipartMessage = new MultipartMessageBuilder()
-				.withHeaderContent(TestUtilMessageService.getArtifactRequestMessage())
+				.withHeaderContent(UtilMessageService.getArtifactRequestMessage())
 				.withPayloadContent("Payload used for testing")
 				.build();
 		String mixed = MultipartMessageProcessor.multipartMessagetoString(multipartMessage, false, Boolean.TRUE);
@@ -89,11 +69,12 @@ public class MultipartMessageProcessorMixedTest {
 	@Test
 	public void multipartMessageToString_justJson() {
 		MultipartMessage multipartMessage = new MultipartMessageBuilder()
-				.withHeaderContent(TestUtilMessageService.getArtifactRequestMessage())
+				.withHeaderContent(UtilMessageService.getArtifactRequestMessage())
 				.withPayloadContent("Payload used for testing")
 				.build();
 		String mixed = MultipartMessageProcessor.multipartMessagetoString(multipartMessage, false, Boolean.FALSE);
 		assertFalse(mixed.contains("ld+json"));
 		assertTrue(mixed.contains("Content-Type: application/json; charset=UTF-8"));
 	}
+	
 }

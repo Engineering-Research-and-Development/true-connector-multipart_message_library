@@ -1,9 +1,9 @@
-name: Java 11 CI
+name: Java 11 CI - build project and run junit tests
 
 on: [push]
 
 jobs:
-  build:
+  build-project:
     runs-on: ubuntu-latest
 
     steps:

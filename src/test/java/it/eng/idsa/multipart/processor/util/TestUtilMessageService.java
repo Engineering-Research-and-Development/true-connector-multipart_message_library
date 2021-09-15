@@ -49,11 +49,13 @@ public class TestUtilMessageService {
 	public static URI ISSUER_CONNECTOR = URI.create("http://w3id.org/engrd/connector");
 	public static URI RECIPIENT_CONNECTOR = URI.create("http://w3id.org/engrd/connector/recipient");
 	
-	public static String MODEL_VERSION = "4.0.0";
+	public static URI SENDER_AGENT = URI.create("http://sender.agent/sender");
+	
+	public static String MODEL_VERSION = "4.1.1";
 	
 	public static URI CORRELATION_MESSAGE = URI.create("http://w3id.org/connectorUnavailableMessage/1a421b8c-3407-44a8-aeb9-253f145c869a");
 	
-	public static URI TRANSFER_CONTRACT = URI.create("http://w3id.org/engrd/connector//examplecontract");
+	public static URI TRANSFER_CONTRACT = URI.create("http://w3id.org/engrd/connector/examplecontract");
 	
 	public static XMLGregorianCalendar ISSUED;
 	
@@ -73,6 +75,8 @@ public class TestUtilMessageService {
 				._issuerConnector_(ISSUER_CONNECTOR)
 				._modelVersion_(MODEL_VERSION)
 				._requestedArtifact_(REQUESTED_ARTIFACT)
+				._senderAgent_(SENDER_AGENT)
+				._securityToken_(getDynamicAttributeToken())
 				.build();
 	}
 
@@ -83,20 +87,11 @@ public class TestUtilMessageService {
 				._transferContract_(TRANSFER_CONTRACT)
 				._issuerConnector_(ISSUER_CONNECTOR)
 				._modelVersion_(MODEL_VERSION)
-				.build();
-	}
-	
-	public static ArtifactRequestMessage getArtifactRequestMessageWithToken() {
-		return new ArtifactRequestMessageBuilder()
-				._issued_(ISSUED)
-				._correlationMessage_(CORRELATION_MESSAGE)
-				._transferContract_(TRANSFER_CONTRACT)
-				._issuerConnector_(ISSUER_CONNECTOR)
-				._modelVersion_(MODEL_VERSION)
-				._requestedArtifact_(REQUESTED_ARTIFACT)
+				._senderAgent_(SENDER_AGENT)
 				._securityToken_(getDynamicAttributeToken())
 				.build();
 	}
+	
 	
 	public static DynamicAttributeToken getDynamicAttributeToken() {
 		return new DynamicAttributeTokenBuilder()
@@ -105,20 +100,14 @@ public class TestUtilMessageService {
 				.build();		
 	}
 	
-	public static DescriptionRequestMessage getDescriptionRequestMessage() {
-		return new DescriptionRequestMessageBuilder()
-				._issued_(ISSUED)
-				._issuerConnector_(ISSUER_CONNECTOR)
-				._modelVersion_(MODEL_VERSION)
-				.build();
-	}
-	
 	public static DescriptionRequestMessage getDescriptionRequestMessage(URI requestedElement) {
 		return new DescriptionRequestMessageBuilder()
 				._issued_(ISSUED)
 				._issuerConnector_(ISSUER_CONNECTOR)
 				._modelVersion_(MODEL_VERSION)
 				._requestedElement_(requestedElement)
+				._senderAgent_(SENDER_AGENT)
+				._securityToken_(getDynamicAttributeToken())
 				.build();
 	}
 	
@@ -128,8 +117,10 @@ public class TestUtilMessageService {
 				._issued_(ISSUED)
 				._modelVersion_(MODEL_VERSION)
 				._transferContract_(TRANSFER_CONTRACT)
-				._correlationMessage_(URI.create("http://correlationMessage"))
+				._correlationMessage_(CORRELATION_MESSAGE)
 				._rejectionReason_(RejectionReason.NOT_AUTHENTICATED)
+				._senderAgent_(SENDER_AGENT)
+				._securityToken_(getDynamicAttributeToken())
 				.build();
 	}
 	
@@ -140,10 +131,12 @@ public class TestUtilMessageService {
 	public static ContractAgreementMessage createContractAgreementMessage() {
 		return new ContractAgreementMessageBuilder()
 				._modelVersion_(MODEL_VERSION)
-				._transferContract_(URI.create("http://transferedContract"))
-				._correlationMessage_(URI.create("http://correlationMessage"))
+				._transferContract_(TRANSFER_CONTRACT)
+				._correlationMessage_(CORRELATION_MESSAGE)
 				._issued_(ISSUED)
 				._issuerConnector_(ISSUER_CONNECTOR)
+				._senderAgent_(SENDER_AGENT)
+				._securityToken_(getDynamicAttributeToken())
 				.build();
 	}
 	
@@ -181,17 +174,20 @@ public class TestUtilMessageService {
 				._issuerConnector_(ISSUER_CONNECTOR)
 				._recipientConnector_(Util.asList(RECIPIENT_CONNECTOR))
 				._correlationMessage_(CORRELATION_MESSAGE)
+				._senderAgent_(SENDER_AGENT)
+				._securityToken_(getDynamicAttributeToken())
 				.build();
 	}
 	
 	public static Map<String, Object> getArtifactResponseMessageAsMap() {
 		Map<String, Object> messageAsMap = new HashMap<>();
 		messageAsMap.put("IDS-Messagetype","ids:ArtifactResponseMessage");
-		messageAsMap.put("IDS-Issued","2021-04-07T13:09:42.306Z");
-		messageAsMap.put("IDS-IssuerConnector","http://true-connector.com");
+		messageAsMap.put("IDS-Issued",ISSUED);
+		messageAsMap.put("IDS-IssuerConnector",ISSUER_CONNECTOR);
 		messageAsMap.put("IDS-Id","https://w3id.org/idsa/autogen/artifactResponseMessage/eb3ab487-dfb0-4d18-b39a-585514dd044f");
-		messageAsMap.put("IDS-ModelVersion","4.0.0");
-		messageAsMap.put("IDS-RequestedArtifact", "http:/true-connector/artifact/1");
+		messageAsMap.put("IDS-ModelVersion", MODEL_VERSION);
+		messageAsMap.put("IDS-RequestedArtifact", REQUESTED_ARTIFACT);
+		messageAsMap.put("IDS-SenderAgent", SENDER_AGENT);
 		return messageAsMap;
 	}
 	
@@ -208,5 +204,5 @@ public class TestUtilMessageService {
 		}
 		return null;
 	}
-
+	
 }

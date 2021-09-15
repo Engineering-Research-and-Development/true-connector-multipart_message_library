@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.eng.idsa</groupId>
 	<artifactId>multipart-message-processor</artifactId>
-	<version>1.0.9-SNAPSHOT</version>
+	<version>1.0.10-SNAPSHOT</version>
 	<name>multipart-message-processor</name>
 	<description>The library for the project Market4.0</description>
 
@@ -18,7 +18,7 @@
 	</repositories>
 	<properties>
 		<project.java.version>11</project.java.version>
-		<information.model.version>4.0.0</information.model.version>
+		<information.model.version>4.1.1</information.model.version>
 		<log4j.version>2.14.0</log4j.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -27,7 +27,7 @@
 	    <repository>
 	      <id>github</id>
 	      <name>GitHub Packages</name>
-	       <url>https://maven.pkg.github.com/Engineering-Research-and-Development/true-connector-multipart_message_library</url>
+	      <url>https://maven.pkg.github.com/Engineering-Research-and-Development/true-connector-multipart_message_library</url>
 	    </repository>
   	</distributionManagement>
 
@@ -39,12 +39,17 @@
 			<version>${information.model.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>de.fraunhofer.iais.eis.ids</groupId>
-			<artifactId>infomodel-serializer</artifactId>
-			<version>${information.model.version}</version>
+		    <groupId>de.fraunhofer.iais.eis.ids.infomodel</groupId>
+		    <artifactId>validation-serialization-provider</artifactId>
+		    <version>${information.model.version}</version>
 		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>de.fraunhofer.iais.eis.ids</groupId> -->
+<!-- 			<artifactId>infomodel-serializer</artifactId> -->
+<!-- 			<version>${information.model.version}</version> -->
+<!-- 		</dependency> -->
 
-		<!-- Loggign -->
+		<!-- Logging -->
 		<dependency>
 		    <groupId>ch.qos.logback</groupId>
 		    <artifactId>logback-core</artifactId>
@@ -132,6 +137,7 @@
 					<additionalClasspathElements>
 						<additionalClasspathElement>src/test/java/</additionalClasspathElement>
 					</additionalClasspathElements>
+					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
 

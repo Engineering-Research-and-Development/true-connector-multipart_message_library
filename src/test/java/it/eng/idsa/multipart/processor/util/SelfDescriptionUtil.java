@@ -120,8 +120,10 @@ public class SelfDescriptionUtil {
 	}	
 	
 
-	private static java.util.List<ResourceCatalog> getCatalogs() {
-		java.util.List<ResourceCatalog> catalogList = null;
+	// we use java.util.ArrayList instead of java.util.List because 
+	// BaseConnectorBuilder._resourceCatalog_() expects java.util.ArrayList<? extends ResourceCatalog>
+	private static java.util.ArrayList<ResourceCatalog> getCatalogs() {
+		java.util.ArrayList<ResourceCatalog> catalogList = null;
 		try {
 			catalogList = new ArrayList<>();
 			Resource[] resource1 = getResources("1");
@@ -146,7 +148,7 @@ public class SelfDescriptionUtil {
 		return new BaseConnectorBuilder(ISSUER_CONNECTOR)
 				._maintainer_(MAINTAINER)
 				._curator_(CURATOR)
-				._resourceCatalog_((ArrayList<? extends ResourceCatalog>) getCatalogs())
+				._resourceCatalog_(getCatalogs())
 				._securityProfile_(SecurityProfile.BASE_SECURITY_PROFILE)
 				._inboundModelVersion_(Util.asList(new String[] { INFO_MODEL_VERSION }))
 				._title_(Util.asList(new TypedLiteral(SELF_DESCRIPTION_TITLE)))
@@ -207,7 +209,7 @@ public class SelfDescriptionUtil {
 				._rightOperand_(new RdfResource("2021-31-12T23:59:00Z", URI.create("xsd:datetime")))
 				.build();
 		
-		Permission permission2 = new PermissionBuilder(URI.create("http://example.com/policy/catalog/" + catalogNumber + "restrict-access-interval"))
+		Permission permission2 = new PermissionBuilder(URI.create("http://example.com/policy/catalog/" + catalogNumber + "/resource/" + resourceOrder + "restrict-access-interval"))
 				._target_(targetURI)
 				._assignee_(Util.asList(URI.create("https://assignee.com")))
 				._assigner_(Util.asList(URI.create("https://assigner.com")))
