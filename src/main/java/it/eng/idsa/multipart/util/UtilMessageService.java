@@ -2,6 +2,9 @@ package it.eng.idsa.multipart.util;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -131,6 +134,10 @@ public class UtilMessageService {
 				.build();
 	}
 	
+	/**
+	 * Creates RejectionMessage
+	 * @return
+	 */
 	public static RejectionMessage getRejectionMessage(RejectionReason rejectionReason) {
 		return new RejectionMessageBuilder()
 				._issuerConnector_(ISSUER_CONNECTOR)
@@ -286,6 +293,23 @@ public class UtilMessageService {
 				._queryLanguage_(queryLanguage)
 				._securityToken_(getDynamicAttributeToken())
 				.build();
+	}
+	
+	public static Map<String, Object> getArtifactResponseMessageAsMap() {
+		Map<String, Object> messageAsMap = new HashMap<>();
+		messageAsMap.put("IDS-Messagetype","ids:ArtifactResponseMessage");
+		messageAsMap.put("IDS-Issued",ISSUED);
+		messageAsMap.put("IDS-IssuerConnector",ISSUER_CONNECTOR);
+		messageAsMap.put("IDS-Id","https://w3id.org/idsa/autogen/artifactResponseMessage/eb3ab487-dfb0-4d18-b39a-585514dd044f");
+		messageAsMap.put("IDS-ModelVersion", MODEL_VERSION);
+		messageAsMap.put("IDS-RequestedArtifact", REQUESTED_ARTIFACT);
+		messageAsMap.put("IDS-SenderAgent", SENDER_AGENT);
+		return messageAsMap;
+	}
+	
+	public static Map<String, String> covnvertMapObjectToMapString(Map<String, Object> objectMap) {
+		return objectMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> (String) e.getValue()));
+
 	}
 
 }
