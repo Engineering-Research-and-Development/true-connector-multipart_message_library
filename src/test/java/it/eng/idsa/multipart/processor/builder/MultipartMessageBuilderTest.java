@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import de.fraunhofer.iais.eis.ArtifactRequestMessage;
 import it.eng.idsa.multipart.builder.MultipartMessageBuilder;
 import it.eng.idsa.multipart.domain.MultipartMessage;
-import it.eng.idsa.multipart.processor.util.TestUtilMessageService;
+import it.eng.idsa.multipart.util.UtilMessageService;
 
 public class MultipartMessageBuilderTest {
 
@@ -27,8 +27,8 @@ public class MultipartMessageBuilderTest {
 	@Test
 	public void buildMessageStringHeadeAndPayloadSuccessful() {
 		MultipartMessage mm = new MultipartMessageBuilder()
-				.withHeaderContent(TestUtilMessageService.getMessageAsString(
-						TestUtilMessageService.getArtifactRequestMessage()))
+				.withHeaderContent(UtilMessageService.getMessageAsString(
+						UtilMessageService.getArtifactRequestMessage()))
 				.withPayloadContent("payload content")
 				.build();
 		assertNotNull(mm);

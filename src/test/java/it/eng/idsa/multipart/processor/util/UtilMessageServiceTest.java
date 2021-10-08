@@ -18,7 +18,7 @@ import de.fraunhofer.iais.eis.RejectionReason;
 import it.eng.idsa.multipart.util.UtilMessageService;
 
 /**
- * Used to validate TestUtilMessageService for compatibility with new IDS model</br>
+ * Used to validate UtilMessageService for compatibility with new IDS model</br>
  * Once version is updated, check if all mandatory fields are still created
  * @author igor.balog
  *
