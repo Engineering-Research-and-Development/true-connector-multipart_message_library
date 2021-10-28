@@ -65,10 +65,24 @@ public class MultipartMessageProcessor {
 		return message;
 	}
 	
+	/**
+	 * Parse String representing MultipartMessage to java object representation</br>
+	 * Split string into multiple lines, using line separator and based from boundary and content disposition,
+	 * creates parts of Multipart message.
+	 * @param message
+	 * @return
+	 */
     public static MultipartMessage parseMultipartMessage(String message) {
         return parseMultipartMessage(message, null);
     }
 
+    /**
+	 * Parse String representing MultipartMessage to java object representation</br>
+	 * @see {@link it.eng.idsa.multipart.processor.MultipartMessageProcessor#parseMultipartMessage parseMultipartMessage(String message)}
+     * @param message
+     * @param contentType
+     * @return
+     */
     public static MultipartMessage parseMultipartMessage(String message, String contentType) {
 
         Optional<String> boundaryFromMessage;
