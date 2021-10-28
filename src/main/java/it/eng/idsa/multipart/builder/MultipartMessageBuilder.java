@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.ids.jsonld.Serializer;
 import it.eng.idsa.multipart.domain.MultipartMessage;
+import it.eng.idsa.multipart.exception.MultipartMessageProcessorException;
 
 /**
  * 
@@ -35,6 +36,12 @@ public class MultipartMessageBuilder {
 	private String signatureContent = null;
 	private String token = null;
 	
+	private static Serializer serializer;
+	
+	static {
+		serializer =  new Serializer();
+	}
+	
 	public MultipartMessageBuilder withHttpHeader(Map<String, String> httpHeaders) {
 		this.httpHeaders = httpHeaders;
 		return this;
@@ -57,9 +64,11 @@ public class MultipartMessageBuilder {
 	
 	public MultipartMessageBuilder withHeaderContent(String headerContent) {
 		try {
-			this.headerContent = new Serializer().deserialize(headerContent, Message.class);
+			this.headerContent = serializer.deserialize(headerContent, Message.class);
 		} catch (IOException e) {
 			logger.error("Could not deserialize header {}", e.getLocalizedMessage());
+			throw new MultipartMessageProcessorException(
+					String.format("Could not deserialize header\n%s", e.getLocalizedMessage()));
 		}
 		return this;
 	}
@@ -85,6 +94,9 @@ public class MultipartMessageBuilder {
 	}
 	
 	public MultipartMessage build() {
+		if(headerContent == null) {
+			throw new MultipartMessageProcessorException("Invalid IDS message");
+		}
 		return new MultipartMessage(
 									httpHeaders, 
 				                    headerHeader,
