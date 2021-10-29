@@ -6,11 +6,11 @@ package it.eng.idsa.multipart.exception;
  * @author igor.balog
  *
  */
-public class MultipartMessageProcessorException extends RuntimeException {
+public class MultipartMessageException extends RuntimeException {
 
 	private static final long serialVersionUID = 5829300650258445289L;
 	
-	public MultipartMessageProcessorException(String message) {
+	public MultipartMessageException(String message) {
 		super(message);
 	}
 }

@@ -23,7 +23,7 @@ import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.ids.jsonld.Serializer;
 import it.eng.idsa.multipart.builder.MultipartMessageBuilder;
 import it.eng.idsa.multipart.domain.MultipartMessage;
-import it.eng.idsa.multipart.exception.MultipartMessageProcessorException;
+import it.eng.idsa.multipart.exception.MultipartMessageException;
 import it.eng.idsa.multipart.util.MultipartMessageKey;
 
 /**
@@ -60,7 +60,7 @@ public class MultipartMessageProcessor {
 			message = serializer.deserialize(String.valueOf(header), Message.class);
 		} catch (IOException e) {
 			logger.error("Error while deserializing message", e);
-			throw new MultipartMessageProcessorException("Error while deserializing message");
+			throw new MultipartMessageException("Error while deserializing message");
 		}
 		return message;
 	}
@@ -94,7 +94,7 @@ public class MultipartMessageProcessor {
             logger.info("Boundary from the multipart message is: " + boundaryFromMessage.get());
         } else {
             logger.info("Boundary does not exist in the multipart message");
-            throw new MultipartMessageProcessorException("Boundary does not exist in the multipart message");
+            throw new MultipartMessageException("Boundary does not exist in the multipart message");
         }
 
         String BOUNDARY = boundaryFromMessage.get();
@@ -110,7 +110,7 @@ public class MultipartMessageProcessor {
                 }
             } else {
                 logger.info("Boundary does not exist in the content type");
-                throw new MultipartMessageProcessorException("Boundary does not exist in the content type");
+                throw new MultipartMessageException("Boundary does not exist in the content type");
             }
         }
 

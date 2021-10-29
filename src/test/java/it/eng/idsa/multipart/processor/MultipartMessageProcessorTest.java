@@ -22,7 +22,7 @@ import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.ids.jsonld.Serializer;
 import it.eng.idsa.multipart.builder.MultipartMessageBuilder;
 import it.eng.idsa.multipart.domain.MultipartMessage;
-import it.eng.idsa.multipart.exception.MultipartMessageProcessorException;
+import it.eng.idsa.multipart.exception.MultipartMessageException;
 import it.eng.idsa.multipart.util.MultipartMessageKey;
 import it.eng.idsa.multipart.util.UtilMessageService;
 
@@ -266,7 +266,7 @@ public class MultipartMessageProcessorTest {
 	
 	@Test
 	public void noBoundaryPresent() {
-		assertThrows(MultipartMessageProcessorException.class,
+		assertThrows(MultipartMessageException.class,
             ()->{
             	MultipartMessageProcessor.parseMultipartMessage("Some multipart message without bundary"
             			+ "\n Next line of message");
@@ -319,7 +319,7 @@ public class MultipartMessageProcessorTest {
 				+ "{\"catalog.offers.0.resourceEndpoints.path\":\"/pet2\"}\r\n"
 				+ "--CQWZRdCCXr5aIuonjmRXF-QzcZ2Kyi4Dkn6--";
 		
-		assertThrows(MultipartMessageProcessorException.class,
+		assertThrows(MultipartMessageException.class,
 	            ()->{
 	            	MultipartMessageProcessor.parseMultipartMessage(multipartMessageString);
 	            });
@@ -334,7 +334,7 @@ public class MultipartMessageProcessorTest {
 	
 	@Test
 	public void getMessageFromStringFail() {
-		assertThrows(MultipartMessageProcessorException.class,
+		assertThrows(MultipartMessageException.class,
 	            ()->{
 	            	MultipartMessageProcessor.getMessage("INVALID MESSAGE");
 	            });
