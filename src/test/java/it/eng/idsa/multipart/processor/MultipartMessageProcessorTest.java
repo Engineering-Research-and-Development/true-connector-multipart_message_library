@@ -260,6 +260,13 @@ public class MultipartMessageProcessorTest {
 		
 	}
 	
+	
+	@Test
+	public void getIDSMessageFromStringHeader() {
+		Message message = MultipartMessageProcessor.getIDSMessage(expectedHeaderContentString);
+		validateMessageFieldValues(message, ARTIFACT_REQUEST_MESSAGE);
+	}
+	
 	@Test
 	@Disabled
 	public void splitString() {
@@ -288,6 +295,10 @@ public class MultipartMessageProcessorTest {
 		sbResultHeaderMessage.delete(0, sbResultHeaderMessage.indexOf("\n") + 1);
 		Message resultHeaderMessage = new Serializer().deserialize(sbResultHeaderMessage.toString(), Message.class);
 
+		validateMessageFieldValues(expectedHeaderMessage, resultHeaderMessage);
+	}
+
+	private void validateMessageFieldValues(Message expectedHeaderMessage, Message resultHeaderMessage) {
 		assertTrue(resultHeaderMessage instanceof ArtifactRequestMessage);
 		assertEquals(expectedHeaderMessage.getId(), resultHeaderMessage.getId());
 		assertEquals(expectedHeaderMessage.getModelVersion(), resultHeaderMessage.getModelVersion());

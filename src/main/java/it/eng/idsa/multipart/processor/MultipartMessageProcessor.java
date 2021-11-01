@@ -19,6 +19,7 @@ import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.ids.jsonld.Serializer;
 import it.eng.idsa.multipart.builder.MultipartMessageBuilder;
 import it.eng.idsa.multipart.domain.MultipartMessage;
@@ -534,5 +535,15 @@ public class MultipartMessageProcessor {
         }
         return objectJson;
     }
+    
+    public static Message getIDSMessage(String header) {
+		Message message = null;
+		try {
+			message = new Serializer().deserialize(header, Message.class);
+		} catch (IOException e) {
+			logger.error("Error while deserializing message", e);
+		}
+		return message;
+	}
     
 }
