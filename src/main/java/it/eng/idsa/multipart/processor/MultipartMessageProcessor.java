@@ -54,10 +54,15 @@ public class MultipartMessageProcessor {
 		serializer =  new Serializer();
 	}
 	
-	public static Message getMessage(Object header) {
+	/**
+	 * Converts Object (String) to IDS Message
+	 * @param in
+	 * @return de.fraunhofer.iais.eis.Message
+	 */
+	public static Message getMessage(Object in) {
 		Message message = null;
 		try {
-			message = serializer.deserialize(String.valueOf(header), Message.class);
+			message = serializer.deserialize(String.valueOf(in), Message.class);
 		} catch (IOException e) {
 			logger.error("Error while deserializing message", e);
 			throw new MultipartMessageException("Error while deserializing message");
@@ -531,6 +536,13 @@ public class MultipartMessageProcessor {
         return buffer.toString();
     }
 
+    /**
+     * Should not be used anymore
+     * @see {@link it.eng.idsa.multipart.processor.MultipartMessageProcessor#serializeToJsonLD serializeToJsonLD(Object object)}
+     * @param object
+     * @return
+     * @throws IOException
+     */
     public static String serializeToPlainJson(Object object) throws IOException {
         String serializePlainJson = serializer.serializePlainJson(object);
         return removeTimezoneFromIssued(serializePlainJson);
@@ -563,15 +575,4 @@ public class MultipartMessageProcessor {
         }
         return objectJson;
     }
-    
-    public static Message getIDSMessage(String header) {
-		Message message = null;
-		try {
-			message = new Serializer().deserialize(header, Message.class);
-		} catch (IOException e) {
-			logger.error("Error while deserializing message", e);
-		}
-		return message;
-	}
-    
 }

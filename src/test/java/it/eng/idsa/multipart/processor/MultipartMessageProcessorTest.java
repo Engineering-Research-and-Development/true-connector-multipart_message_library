@@ -264,13 +264,6 @@ public class MultipartMessageProcessorTest {
 		
 	}
 	
-	
-	@Test
-	public void getIDSMessageFromStringHeader() {
-		Message message = MultipartMessageProcessor.getIDSMessage(expectedHeaderContentString);
-		validateMessageFieldValues(message, ARTIFACT_REQUEST_MESSAGE);
-	}
-	
 	@Test
 	public void noBoundaryPresent() {
 		assertThrows(MultipartMessageException.class,
