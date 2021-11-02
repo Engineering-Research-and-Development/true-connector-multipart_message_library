@@ -23,6 +23,7 @@ import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.ids.jsonld.Serializer;
 import it.eng.idsa.multipart.builder.MultipartMessageBuilder;
 import it.eng.idsa.multipart.domain.MultipartMessage;
+import it.eng.idsa.multipart.exception.MultipartMessageException;
 import it.eng.idsa.multipart.util.MultipartMessageKey;
 
 /**
@@ -47,10 +48,41 @@ public class MultipartMessageProcessor {
     private static final String DEFAULT_CONTENT_TYPE = "multipart/mixed; boundary=CQWZRdCCXr5aIuonjmRXF-QzcZ2Kyi4Dkn6;charset=UTF-8";
     private static final String DEFAULT_CONTENT_DISPOSITION = MultipartMessageKey.CONTENT_DISPOSITION.label + ": form-data; name=";
 
+    private static Serializer serializer;
+	
+	static {
+		serializer =  new Serializer();
+	}
+	
+	public static Message getMessage(Object header) {
+		Message message = null;
+		try {
+			message = serializer.deserialize(String.valueOf(header), Message.class);
+		} catch (IOException e) {
+			logger.error("Error while deserializing message", e);
+			throw new MultipartMessageException("Error while deserializing message");
+		}
+		return message;
+	}
+	
+	/**
+	 * Parse String representing MultipartMessage to java object representation</br>
+	 * Split string into multiple lines, using line separator and based from boundary and content disposition,
+	 * creates parts of Multipart message.
+	 * @param message
+	 * @return
+	 */
     public static MultipartMessage parseMultipartMessage(String message) {
         return parseMultipartMessage(message, null);
     }
 
+    /**
+	 * Parse String representing MultipartMessage to java object representation</br>
+	 * @see {@link it.eng.idsa.multipart.processor.MultipartMessageProcessor#parseMultipartMessage parseMultipartMessage(String message)}
+     * @param message
+     * @param contentType
+     * @return
+     */
     public static MultipartMessage parseMultipartMessage(String message, String contentType) {
 
         Optional<String> boundaryFromMessage;
@@ -62,7 +94,7 @@ public class MultipartMessageProcessor {
             logger.info("Boundary from the multipart message is: " + boundaryFromMessage.get());
         } else {
             logger.info("Boundary does not exist in the multipart message");
-            //TODO: Throw exception.
+            throw new MultipartMessageException("Boundary does not exist in the multipart message");
         }
 
         String BOUNDARY = boundaryFromMessage.get();
@@ -78,7 +110,7 @@ public class MultipartMessageProcessor {
                 }
             } else {
                 logger.info("Boundary does not exist in the content type");
-                // TODO: Throw exception
+                throw new MultipartMessageException("Boundary does not exist in the content type");
             }
         }
 
@@ -292,7 +324,8 @@ public class MultipartMessageProcessor {
     }
 
     private static MultipartMessage createMultipartMessage(List<List<String>> multipartMessageParts, String contentType) {
-        MultipartMessageBuilder multipartMessageBuilder = new MultipartMessageBuilder();
+        
+    	MultipartMessageBuilder multipartMessageBuilder = new MultipartMessageBuilder();
 
         if (contentType != null) {
             Map<String, String> httpHeader = new HashMap<String, String>() {
@@ -312,7 +345,7 @@ public class MultipartMessageProcessor {
                                     String partName = getMultipartMessagePartName(part);
                                     Map<String, String> partHeader = getPartHeader(part);
                                     String partContent = getPartContent(part);
-                                    fillMultipartMessage(multipartMessageBuilder, partName, partHeader, partContent);
+									fillMultipartMessage(multipartMessageBuilder, partName, partHeader, partContent);
                                 }
                         );
         MultipartMessage multipartMessage = multipartMessageBuilder.build();
@@ -419,12 +452,9 @@ public class MultipartMessageProcessor {
     }
 
     public static Optional<String> getMessageBoundaryFromMessage(String message) {
-        String boundary = null;
-        Stream<String> lines = message.lines();
-        boundary = lines.filter(line -> line.startsWith("--"))
-                .findFirst()
-                .get();
-        return Optional.ofNullable(boundary);
+        return message.lines()
+        		.filter(line -> line.startsWith("--"))
+                .findFirst();
     }
 
     private static List<List<String>> getMultipartMessagesParts(Predicate<String> predicateLineBoundary, String multipart) {
@@ -502,7 +532,6 @@ public class MultipartMessageProcessor {
     }
 
     public static String serializeToPlainJson(Object object) throws IOException {
-        Serializer serializer = new Serializer();
         String serializePlainJson = serializer.serializePlainJson(object);
         return removeTimezoneFromIssued(serializePlainJson);
     }
@@ -514,7 +543,6 @@ public class MultipartMessageProcessor {
      * @throws IOException
      */
     public static String serializeToJsonLD(Object object) throws IOException {
-        Serializer serializer = new Serializer();
         String serializePlainJson = serializer.serialize(object);
         return removeTimezoneFromIssued(serializePlainJson);
     }
