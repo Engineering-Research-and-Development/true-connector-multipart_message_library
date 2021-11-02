@@ -353,6 +353,10 @@ public class MultipartMessageProcessorTest {
 		sbResultHeaderMessage.delete(0, sbResultHeaderMessage.indexOf("\n") + 1);
 		Message resultHeaderMessage = new Serializer().deserialize(sbResultHeaderMessage.toString(), Message.class);
 
+		validateMessageFieldValues(expectedHeaderMessage, resultHeaderMessage);
+	}
+
+	private void validateMessageFieldValues(Message expectedHeaderMessage, Message resultHeaderMessage) {
 		assertTrue(resultHeaderMessage instanceof ArtifactRequestMessage);
 		assertEquals(expectedHeaderMessage.getId(), resultHeaderMessage.getId());
 		assertEquals(expectedHeaderMessage.getModelVersion(), resultHeaderMessage.getModelVersion());
