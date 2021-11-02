@@ -11,10 +11,10 @@ jobs:
       contents: read
       packages: write 
     steps:
-      - uses: actions/delete-package-versions@v1
-        with:
-          package-name: 'it.eng.idsa.multipart-message-processor'
-          num-old-versions-to-delete: 5
+      #- uses: actions/delete-package-versions@v1
+        #with:
+         # package-name: 'it.eng.idsa.multipart-message-processor'
+          #num-old-versions-to-delete: 5
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v2
         with:
