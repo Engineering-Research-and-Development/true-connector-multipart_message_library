@@ -2,11 +2,14 @@ package it.eng.idsa.multipart.processor;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,6 +22,7 @@ import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.ids.jsonld.Serializer;
 import it.eng.idsa.multipart.builder.MultipartMessageBuilder;
 import it.eng.idsa.multipart.domain.MultipartMessage;
+import it.eng.idsa.multipart.exception.MultipartMessageException;
 import it.eng.idsa.multipart.util.MultipartMessageKey;
 import it.eng.idsa.multipart.util.UtilMessageService;
 
@@ -261,6 +265,25 @@ public class MultipartMessageProcessorTest {
 	}
 	
 	@Test
+	public void noBoundaryPresent() {
+		assertThrows(MultipartMessageException.class,
+            ()->{
+            	MultipartMessageProcessor.parseMultipartMessage("Some multipart message without bundary"
+            			+ "\n Next line of message");
+            });
+	}
+	
+	@Test
+	public void getBoundary() {
+    	Optional<String> boundary = MultipartMessageProcessor.getMessageBoundaryFromMessage(
+    			"Some multipart message with bundary\r\n" + ""
+    			+ "--Boundary\r\n"  
+    			+ "\n Next line of message");
+    	assertTrue(boundary.isPresent());
+    	assertEquals("--Boundary", boundary.get());
+	}
+	
+	@Test
 	@Disabled
 	public void splitString() {
 		Map<String, String> headers = new HashMap<>();
@@ -273,6 +296,48 @@ public class MultipartMessageProcessorTest {
                  .flatMap(e -> Stream.of(e.getKey() + ": " + e.getValue()))
                  .collect(Collectors.joining(System.lineSeparator()));
 		System.out.println(headerHeaderString);
+	}
+	
+	@Test
+	public void invalidHeaderPart() {
+		multipartMessageString = "--CQWZRdCCXr5aIuonjmRXF-QzcZ2Kyi4Dkn6\r\n"
+				+ "Content-Disposition: form-data; name=\"header\"\r\n"
+				+ "Content-Length: 333\r\n"
+				+ "\r\n"
+				+ "{\r\n"
+				+ "	  \"@context\" : {\r\n"
+				+ "		\"ids\" : \"https://w3id.org/idsa/core/\"\r\n"
+				+ "	  },\r\n"
+				+ "	  \"@type\" : \"ids:ArtifactRequestMessage\",\r\n"
+				+ "	  \"@id\" : \"https://w3id.org/idsa/autogen/artifactRequestMessage/76481a41-8117-4c79-bdf4-9903ef8f825a\"\r\n"
+				+ "}\r\n"
+				+ "\r\n"
+				+ "--CQWZRdCCXr5aIuonjmRXF-QzcZ2Kyi4Dkn6\r\n"
+				+ "Content-Disposition: form-data; name=\"payload\"\r\n"
+				+ "Content-Length: 50\r\n"
+				+ "\r\n"
+				+ "{\"catalog.offers.0.resourceEndpoints.path\":\"/pet2\"}\r\n"
+				+ "--CQWZRdCCXr5aIuonjmRXF-QzcZ2Kyi4Dkn6--";
+		
+		assertThrows(MultipartMessageException.class,
+	            ()->{
+	            	MultipartMessageProcessor.parseMultipartMessage(multipartMessageString);
+	            });
+	}
+	
+	@Test
+	public void getMessageFromStringSuccess() {
+		Message result = MultipartMessageProcessor.getMessage(UtilMessageService.getMessageAsString(
+				UtilMessageService.getArtifactRequestMessage()));
+		assertNotNull(result);
+	}
+	
+	@Test
+	public void getMessageFromStringFail() {
+		assertThrows(MultipartMessageException.class,
+	            ()->{
+	            	MultipartMessageProcessor.getMessage("INVALID MESSAGE");
+	            });
 	}
 	
 	private void validateHeaderMessagesAreTheSame(String expectedHeader, String resultHeader) throws IOException {
