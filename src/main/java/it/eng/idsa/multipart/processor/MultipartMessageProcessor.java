@@ -175,13 +175,13 @@ public class MultipartMessageProcessor {
                         .parallelStream()
                         .map(e -> e.getValue().toString())
                         .collect(Collectors.joining(System.lineSeparator()));
+                httpHeadersString = httpHeadersString.concat(System.lineSeparator());
             }
-            multipartMessageString.append(httpHeadersString + System.lineSeparator());
-            multipartMessageString.append(System.lineSeparator());
+            multipartMessageString.append(httpHeadersString).append(System.lineSeparator());
         }
 
         // Append separator boundary
-        multipartMessageString.append(SEPARTOR_BOUNDARY + System.lineSeparator());
+        multipartMessageString.append(SEPARTOR_BOUNDARY).append(System.lineSeparator());
 
         // Append headerHeader
         String headerHeaderString;
@@ -193,16 +193,17 @@ public class MultipartMessageProcessor {
                     .parallelStream()
                     .flatMap(e -> Stream.of(e.getKey() + ": " + e.getValue()))
                     .collect(Collectors.joining(System.lineSeparator()));
+            headerHeaderString = headerHeaderString.concat(System.lineSeparator());
         }
-        multipartMessageString.append(headerHeaderString + System.lineSeparator());
+        multipartMessageString.append(headerHeaderString).append(System.lineSeparator());
 
         // Append headerContent
-        multipartMessageString.append(message.getHeaderContentString() + System.lineSeparator());
+        multipartMessageString.append(message.getHeaderContentString()).append(System.lineSeparator());
 
         // Append payload
         if (payloadTester) {
             // Append separator boundary
-            multipartMessageString.append(SEPARTOR_BOUNDARY + System.lineSeparator());
+            multipartMessageString.append(SEPARTOR_BOUNDARY).append(System.lineSeparator());
 
             // Append payloadHeader
             String payloadHeader;
@@ -214,18 +215,18 @@ public class MultipartMessageProcessor {
                         .parallelStream()
                         .flatMap(e -> Stream.of(e.getKey() + ": " + e.getValue()))
                         .collect(Collectors.joining(System.lineSeparator()));
+                payloadHeader = payloadHeader.concat(System.lineSeparator());
             }
-            multipartMessageString.append(payloadHeader + System.lineSeparator());
-            multipartMessageString.append(System.lineSeparator());
+            multipartMessageString.append(payloadHeader).append(System.lineSeparator());
 
             // Append payloadContent
-            multipartMessageString.append(message.getPayloadContent() + System.lineSeparator());
+            multipartMessageString.append(message.getPayloadContent()).append(System.lineSeparator());
         }
 
         // Append signature
         if (signatureTester) {
             // Append separator boundary
-            multipartMessageString.append(SEPARTOR_BOUNDARY + System.lineSeparator());
+            multipartMessageString.append(SEPARTOR_BOUNDARY).append(System.lineSeparator());
 
             // Append signatureHeader
             String signatureHeaderString;
@@ -237,12 +238,12 @@ public class MultipartMessageProcessor {
                         .parallelStream()
                         .flatMap(e -> Stream.of(e.getKey() + ": " + e.getValue()))
                         .collect(Collectors.joining(System.lineSeparator()));
+                signatureHeaderString = signatureHeaderString.concat(System.lineSeparator());
             }
-            multipartMessageString.append(signatureHeaderString + System.lineSeparator());
-            multipartMessageString.append(System.lineSeparator());
+            multipartMessageString.append(signatureHeaderString).append(System.lineSeparator());
 
             // Append signatureContent
-            multipartMessageString.append(message.getSignatureContent() + System.lineSeparator());
+            multipartMessageString.append(message.getSignatureContent()).append(System.lineSeparator());
         }
 
         // Append end separator boundary
