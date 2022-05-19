@@ -98,7 +98,7 @@ public class UtilMessageServiceTest {
 	
 	@Test
 	public void contractRequest() {
-		ContractRequest cr = UtilMessageService.getContractRequest(URI.create("https://artifact.id"));
+		ContractRequest cr = UtilMessageService.getContractRequest(URI.create("https://artifact.id"), URI.create("https://permission.id"));
 		assertNotNull(cr);
 	}
 	

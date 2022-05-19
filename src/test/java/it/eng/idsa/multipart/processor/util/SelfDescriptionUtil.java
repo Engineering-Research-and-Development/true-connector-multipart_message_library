@@ -6,11 +6,19 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import de.fraunhofer.iais.eis.Action;
@@ -39,12 +47,14 @@ import de.fraunhofer.iais.eis.ResourceCatalog;
 import de.fraunhofer.iais.eis.ResourceCatalogBuilder;
 import de.fraunhofer.iais.eis.SecurityProfile;
 import de.fraunhofer.iais.eis.TextRepresentationBuilder;
+import de.fraunhofer.iais.eis.TextResourceBuilder;
 import de.fraunhofer.iais.eis.ids.jsonld.Serializer;
 import de.fraunhofer.iais.eis.util.ConstraintViolationException;
 import de.fraunhofer.iais.eis.util.RdfResource;
 import de.fraunhofer.iais.eis.util.TypedLiteral;
 import de.fraunhofer.iais.eis.util.Util;
 import it.eng.idsa.multipart.util.DateUtil;
+import it.eng.idsa.multipart.util.UtilMessageService;
 
 /**
  * Utility class for creating SelfDescription document with 2 resource catalogs and each resource catalog has</br>
@@ -57,16 +67,18 @@ public class SelfDescriptionUtil {
 	private static final @NotNull URI ISSUER_CONNECTOR = URI.create("https://issuer.connector.com");
 	private static URI MAINTAINER = URI.create("https://maintainer.connector.com");
 	private static URI CURATOR = URI.create("https://curator.connector.com");
-	private static String INFO_MODEL_VERSION = "4.0.0";
+	private static String INFO_MODEL_VERSION = "4.1.0";
 	private static String SELF_DESCRIPTION_TITLE = "Self Description title";
 	private static String SELF_DESCRIPTION_DESCRIPTION = "Self Description - description with some more text";
-	private static String OUTBOUND_INFO_MODEL_VERSION = "4.0.0";
+	private static String OUTBOUND_INFO_MODEL_VERSION = "4.1.0";
 	private static @NotNull URI DEFAUT_ENDPOINT = URI.create("https://default.endpoint.com");;
 	private static URI ACCESS_URL = URI.create("https://access.url.com");;
 
 	private static Resource[] getResources(String catalogNumber) {
 		String RESOURCE_TITLE = "Resource title";
 		String RESOURCE_DESCRIPTION = "Resource description";
+		String RESOURCE_DESCRIPTIOND = "In order to filter search you can pass following json { JSON CONTENT startDate, endDate, page, size}";
+
 		
 		URI artifact1URI = URI.create("http://w3id.org/engrd/connector/artifact/catalog/" + catalogNumber + "/resource/1");
 		Representation defaultRepresentation1 = new DataRepresentationBuilder(
@@ -74,14 +86,15 @@ public class SelfDescriptionUtil {
 				._created_(DateUtil.now())
 				._instance_(Util.asList(getArtifact(
 						URI.create("http://w3id.org/engrd/connector/artifact/catalog/" + catalogNumber + "/artifact/1"), 
+//						URI.create("http://engie.com/platoon/resource/windfarm/frsmv/grid/GRID"),
 						"some_file_catalog_" + catalogNumber + "_1" + ".pdf")))
 				.build();
 
 		ContractOffer offer1 = createContractOffer(artifact1URI, catalogNumber, "1", "1");
 		
 		Resource offeredResource1 = (new DataResourceBuilder(artifact1URI))
-				._title_(Util.asList(new TypedLiteral(RESOURCE_TITLE)))
-				._description_(Util.asList(new TypedLiteral(RESOURCE_DESCRIPTION)))
+				._title_(Util.asList(new TypedLiteral("Windfarm Turbine data")))
+				._description_(Util.asList(new TypedLiteral(RESOURCE_DESCRIPTIOND)))
 				._contentType_(ContentType.SCHEMA_DEFINITION)
 				._keyword_(Util.asList(new TypedLiteral("Engineering Ingegneria Informatica SpA"),
 						new TypedLiteral("broker"), new TypedLiteral("trueConnector")))
@@ -143,7 +156,8 @@ public class SelfDescriptionUtil {
 		}
 		return catalogList;
 	}
-	
+//	"Not used anymore"
+	@Deprecated
 	public static Connector getBaseConnector() {
 		return new BaseConnectorBuilder(ISSUER_CONNECTOR)
 				._maintainer_(MAINTAINER)
@@ -201,12 +215,12 @@ public class SelfDescriptionUtil {
 		Constraint before = new ConstraintBuilder()
 				._leftOperand_(LeftOperand.POLICY_EVALUATION_TIME)
 				._operator_(BinaryOperator.AFTER)
-				._rightOperand_(new RdfResource("2020-10-01T00:00:00Z", URI.create("xsd:datetime")))
+				._rightOperand_(new RdfResource("2020-10-01T00:00:00Z", URI.create("http://www.w3.org/2001/XMLSchema#dateTimeStamp")))
 				.build();
 		Constraint after = new ConstraintBuilder()
 				._leftOperand_(LeftOperand.POLICY_EVALUATION_TIME)
 				._operator_(BinaryOperator.BEFORE)
-				._rightOperand_(new RdfResource("2021-31-12T23:59:00Z", URI.create("xsd:datetime")))
+				._rightOperand_(new RdfResource("2021-31-12T23:59:00Z", URI.create("http://www.w3.org/2001/XMLSchema#dateTimeStamp")))
 				.build();
 		
 		Permission permission2 = new PermissionBuilder(URI.create("http://example.com/policy/catalog/" + catalogNumber + "/resource/" + resourceOrder + "restrict-access-interval"))
@@ -225,8 +239,106 @@ public class SelfDescriptionUtil {
 				.build();
 	}
 	
+	/**
+	 * Use this method in tests to create basic self description
+	 * @return
+	 */
+	public static Connector createDefaultSelfDescription() {
+		return new BaseConnectorBuilder(URI.create("https://w3id.org/engrd/connector/"))
+				._maintainer_(URI.create("http://sender.maintainerURI.com"))
+				._curator_(URI.create("http://sender.curatorURI.com"))
+				._resourceCatalog_(getCatalog())
+				._securityProfile_(SecurityProfile.BASE_SECURITY_PROFILE)
+				._inboundModelVersion_(Util.asList(new String[] { UtilMessageService.MODEL_VERSION }))
+				._title_(Util.asList(new TypedLiteral("Connector title")))
+				._description_(Util.asList(new TypedLiteral("Connector description")))
+				._outboundModelVersion_(UtilMessageService.MODEL_VERSION)
+				._hasDefaultEndpoint_(new ConnectorEndpointBuilder(URI.create("http://default.endpoint.com"))
+						._accessURL_(URI.create("http://default.endpoint.com"))
+						.build())
+				.build();
+	}
+	
+	private static java.util.List<ResourceCatalog> getCatalog() {
+		Artifact defaultArtifact = new ArtifactBuilder(URI.create("http://w3id.org/engrd/connector/artifact/1"))
+			._creationDate_(DateUtil.now())
+			.build();
+		
+		Resource offeredResource = (new TextResourceBuilder())
+				._title_(Util.asList(new TypedLiteral("Default resource")))
+				._description_(Util.asList(new TypedLiteral("Default resource description")))
+				._contentType_(ContentType.SCHEMA_DEFINITION)
+				._keyword_(Util.asList(new TypedLiteral("Engineering Ingegneria Informatica SpA"),
+						new TypedLiteral("TRUEConnector")))
+				._version_("1.0.0")._language_(Util.asList(Language.EN, Language.IT))
+				._modified_(DateUtil.now())
+				._created_(DateUtil.now())
+				._contractOffer_(Util.asList(createContractOffer()))
+				._representation_(Util.asList(getTextRepresentation(defaultArtifact)))
+				.build();
+		
+		List<ResourceCatalog> catalogList = new ArrayList<>();
+		ArrayList<Resource> offeredResources = new ArrayList<>();
+		offeredResources.add(offeredResource);
+		catalogList.add(new ResourceCatalogBuilder()._offeredResource_(offeredResources).build());
+		return catalogList;
+	}
+	
+	private static ContractOffer createContractOffer() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		OffsetDateTime dateTime = OffsetDateTime.now(ZoneOffset.UTC);
+		
+		Constraint before = new ConstraintBuilder()
+				._leftOperand_(LeftOperand.POLICY_EVALUATION_TIME)
+				._operator_(BinaryOperator.AFTER)
+				._rightOperand_(new RdfResource(dateTime.minusDays(7).format(formatter), 
+						URI.create("http://www.w3.org/2001/XMLSchema#dateTimeStamp")))
+				.build();
+		
+		Constraint after = new ConstraintBuilder()
+				._leftOperand_(LeftOperand.POLICY_EVALUATION_TIME)
+				._operator_(BinaryOperator.BEFORE)
+				._rightOperand_(new RdfResource(dateTime.plusMonths(1).format(formatter), 
+						URI.create("http://www.w3.org/2001/XMLSchema#dateTimeStamp")))
+				.build();
+		
+		Permission permission2 = new PermissionBuilder()
+				._target_(URI.create("http://w3id.org/engrd/connector/artifact/1"))
+				._assignee_(Util.asList(URI.create("https://assignee.com")))
+				._assigner_(Util.asList(URI.create("https://assigner.com")))
+				._action_(Util.asList(Action.USE))
+				._constraint_(Util.asList(before, after))
+				.build();
+		
+		GregorianCalendar c = new GregorianCalendar();
+		c.setTime(new Date());
+		XMLGregorianCalendar xmlDate = null;
+		try {
+			xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
+		} catch (DatatypeConfigurationException e) {
+			System.out.println(e);
+		}
+		
+		return new ContractOfferBuilder()
+				._consumer_(URI.create("https://consumer.com"))
+				._provider_(URI.create("https://provider.com"))
+				._permission_(Util.asList(permission2))
+				._contractDate_(DateUtil.now())
+				._contractStart_(xmlDate)
+				._contractEnd_(null)
+				.build();
+	}
+	
+	private static Representation getTextRepresentation(Artifact artifact) {
+		return new TextRepresentationBuilder()
+				._created_(DateUtil.now())
+				._instance_(Util.asList(artifact))
+				._language_(Language.EN)
+				.build();
+	}
+	
 	@Test
-	@Disabled("Used only for development purposes to get self descriptionn document")
+//	@Disabled("Used only for development purposes to get self descriptionn document")
 	public void getConnector() throws IOException {
 		Connector connector = getBaseConnector();
 		assertNotNull(connector);

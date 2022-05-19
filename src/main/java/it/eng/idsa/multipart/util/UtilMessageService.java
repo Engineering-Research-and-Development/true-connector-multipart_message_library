@@ -36,6 +36,7 @@ import de.fraunhofer.iais.eis.DescriptionRequestMessageBuilder;
 import de.fraunhofer.iais.eis.DynamicAttributeToken;
 import de.fraunhofer.iais.eis.DynamicAttributeTokenBuilder;
 import de.fraunhofer.iais.eis.LeftOperand;
+import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.Permission;
 import de.fraunhofer.iais.eis.PermissionBuilder;
 import de.fraunhofer.iais.eis.QueryLanguage;
@@ -117,6 +118,45 @@ public class UtilMessageService {
 				._securityToken_(getDynamicAttributeToken())
 				.build();
 	}
+	
+	/**
+	 * Requested artifact and Transfer contract as parameters
+	 * @param requestedArtifact
+	 * @param transferContract
+	 * @return
+	 */
+	public static Message getArtifactRequestMessageWithTransferContract(String requestedArtifact, String transferContract) {
+		return new ArtifactRequestMessageBuilder()
+				._issued_(UtilMessageService.ISSUED)
+				._transferContract_(URI.create(transferContract))
+				._issuerConnector_(UtilMessageService.ISSUER_CONNECTOR)
+				._modelVersion_(UtilMessageService.MODEL_VERSION)
+				._requestedArtifact_(URI.create(requestedArtifact))
+				._senderAgent_(UtilMessageService.SENDER_AGENT)
+				._securityToken_(UtilMessageService.getDynamicAttributeToken())
+				.build();
+	}
+	
+	/**
+	 * With additional parameters for customizing
+	 * @param requestedArtifact
+	 * @param transferContract
+	 * @param issuerConnector
+	 * @param senderAgent
+	 * @return
+	 */
+	public static Message getArtifactRequestMessage(String requestedArtifact, String transferContract, 
+			String issuerConnector, String senderAgent) {
+		return new ArtifactRequestMessageBuilder()
+				._issued_(UtilMessageService.ISSUED)
+				._transferContract_(URI.create(transferContract))
+				._issuerConnector_(URI.create(issuerConnector))
+				._modelVersion_(UtilMessageService.MODEL_VERSION)
+				._requestedArtifact_(URI.create(requestedArtifact))
+				._senderAgent_(URI.create(senderAgent))
+				._securityToken_(UtilMessageService.getDynamicAttributeToken())
+				.build();
+	}
 
 	/**
 	 * Creates ArtifactResponseMessage
@@ -191,7 +231,7 @@ public class UtilMessageService {
 	public static ContractAgreement getContractAgreement() {
 		Constraint constraint = new ConstraintBuilder()
 				._leftOperand_(LeftOperand.POLICY_EVALUATION_TIME)
-				._operator_(BinaryOperator.EQUALS)
+				._operator_(BinaryOperator.AFTER)
 				._rightOperand_(new RdfResource("2021-04-01T00:00:00Z", URI.create("xsd:datetimeStamp")))
 				._pipEndpoint_(URI.create("https//pip.com/policy_evaluation_time"))
 				.build();
@@ -225,11 +265,11 @@ public class UtilMessageService {
 				.build();
 	}
 	
-	public static ContractRequest getContractRequest(URI requestedArtifact) {
+	public static ContractRequest getContractRequest(URI requestedArtifact, URI permissionId) {
 		return new ContractRequestBuilder()
 				._provider_(URI.create("https://provider.com"))
 				._consumer_(URI.create("https://consumer.com"))
-				._permission_(new PermissionBuilder()
+				._permission_(new PermissionBuilder(permissionId)
 						._action_(Action.USE)
 						._target_(requestedArtifact)
 						._constraint_(new ConstraintBuilder()
