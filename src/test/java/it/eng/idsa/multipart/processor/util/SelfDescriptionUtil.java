@@ -19,35 +19,9 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import de.fraunhofer.iais.eis.*;
 import org.junit.jupiter.api.Test;
 
-import de.fraunhofer.iais.eis.Action;
-import de.fraunhofer.iais.eis.Artifact;
-import de.fraunhofer.iais.eis.ArtifactBuilder;
-import de.fraunhofer.iais.eis.BaseConnectorBuilder;
-import de.fraunhofer.iais.eis.BinaryOperator;
-import de.fraunhofer.iais.eis.Connector;
-import de.fraunhofer.iais.eis.ConnectorEndpointBuilder;
-import de.fraunhofer.iais.eis.Constraint;
-import de.fraunhofer.iais.eis.ConstraintBuilder;
-import de.fraunhofer.iais.eis.ContentType;
-import de.fraunhofer.iais.eis.ContractOffer;
-import de.fraunhofer.iais.eis.ContractOfferBuilder;
-import de.fraunhofer.iais.eis.DataRepresentationBuilder;
-import de.fraunhofer.iais.eis.DataResourceBuilder;
-import de.fraunhofer.iais.eis.ImageRepresentationBuilder;
-import de.fraunhofer.iais.eis.ImageResourceBuilder;
-import de.fraunhofer.iais.eis.Language;
-import de.fraunhofer.iais.eis.LeftOperand;
-import de.fraunhofer.iais.eis.Permission;
-import de.fraunhofer.iais.eis.PermissionBuilder;
-import de.fraunhofer.iais.eis.Representation;
-import de.fraunhofer.iais.eis.Resource;
-import de.fraunhofer.iais.eis.ResourceCatalog;
-import de.fraunhofer.iais.eis.ResourceCatalogBuilder;
-import de.fraunhofer.iais.eis.SecurityProfile;
-import de.fraunhofer.iais.eis.TextRepresentationBuilder;
-import de.fraunhofer.iais.eis.TextResourceBuilder;
 import de.fraunhofer.iais.eis.ids.jsonld.Serializer;
 import de.fraunhofer.iais.eis.util.ConstraintViolationException;
 import de.fraunhofer.iais.eis.util.RdfResource;
@@ -101,7 +75,7 @@ public class SelfDescriptionUtil {
 				._version_("1.0.0")._language_(Util.asList(Language.EN, Language.IT))
 				._modified_(DateUtil.now())
 				._created_(DateUtil.now())
-				._sovereign_(URI.create("https://sovereign.com"))
+				._sovereignAsUri_(URI.create("https://sovereign.com"))
 				._contractOffer_(Util.asList(offer1))
 				._representation_(Util.asList(defaultRepresentation1))
 				.build();
@@ -125,7 +99,7 @@ public class SelfDescriptionUtil {
 				._version_("1.0.0")._language_(Util.asList(Language.EN, Language.IT))
 				._modified_(DateUtil.now())
 				._created_(DateUtil.now())
-				._sovereign_(URI.create("https://sovereign.com"))
+				._sovereignAsUri_(URI.create("https://sovereign.com"))
 				._contractOffer_(Util.asList(offer2))
 				._representation_(Util.asList(defaultRepresentation2))
 				.build();
@@ -142,13 +116,13 @@ public class SelfDescriptionUtil {
 			Resource[] resource1 = getResources("1");
 			ResourceCatalog catalog1 = null;
 			catalog1 = new ResourceCatalogBuilder(URI.create("http://catalog.com/1"))
-					._offeredResource_(Util.asList(resource1))
+					._offeredResourceAsObject_(Util.asList(resource1))
 					.build();
 			catalogList.add(catalog1);
 			Resource[] resource2 = getResources("2");
 			ResourceCatalog catalog2 = null;
 			catalog2 = new ResourceCatalogBuilder(URI.create("http://catalog.com/2"))
-					._offeredResource_(Util.asList(resource2))
+					._offeredResourceAsObject_(Util.asList(resource2))
 					.build();
 			catalogList.add(catalog2);
 		} catch (ConstraintViolationException e) {
@@ -160,8 +134,8 @@ public class SelfDescriptionUtil {
 	@Deprecated
 	public static Connector getBaseConnector() {
 		return new BaseConnectorBuilder(ISSUER_CONNECTOR)
-				._maintainer_(MAINTAINER)
-				._curator_(CURATOR)
+				._maintainerAsUri_(MAINTAINER)
+				._curatorAsUri_(CURATOR)
 				._resourceCatalog_(getCatalogs())
 				._securityProfile_(SecurityProfile.BASE_SECURITY_PROFILE)
 				._inboundModelVersion_(Util.asList(new String[] { INFO_MODEL_VERSION }))
@@ -216,11 +190,13 @@ public class SelfDescriptionUtil {
 				._leftOperand_(LeftOperand.POLICY_EVALUATION_TIME)
 				._operator_(BinaryOperator.AFTER)
 				._rightOperand_(new RdfResource("2020-10-01T00:00:00Z", URI.create("http://www.w3.org/2001/XMLSchema#dateTimeStamp")))
+				._pipEndpoint_(new PIPBuilder()._endpointURI_(URI.create("https//pip.com/policy_evaluation_time"))._interfaceDescription_(URI.create("https//pip.com/policy_inteface_description")).build())
 				.build();
 		Constraint after = new ConstraintBuilder()
 				._leftOperand_(LeftOperand.POLICY_EVALUATION_TIME)
 				._operator_(BinaryOperator.BEFORE)
 				._rightOperand_(new RdfResource("2021-31-12T23:59:00Z", URI.create("http://www.w3.org/2001/XMLSchema#dateTimeStamp")))
+				._pipEndpoint_(new PIPBuilder()._endpointURI_(URI.create("https//pip.com/policy_evaluation_time"))._interfaceDescription_(URI.create("https//pip.com/policy_inteface_description")).build())
 				.build();
 		
 		Permission permission2 = new PermissionBuilder(URI.create("http://example.com/policy/catalog/" + catalogNumber + "/resource/" + resourceOrder + "restrict-access-interval"))
@@ -245,8 +221,8 @@ public class SelfDescriptionUtil {
 	 */
 	public static Connector createDefaultSelfDescription() {
 		return new BaseConnectorBuilder(URI.create("https://w3id.org/engrd/connector/"))
-				._maintainer_(URI.create("http://sender.maintainerURI.com"))
-				._curator_(URI.create("http://sender.curatorURI.com"))
+				._maintainerAsUri_(URI.create("http://sender.maintainerURI.com"))
+				._curatorAsUri_(URI.create("http://sender.curatorURI.com"))
 				._resourceCatalog_(getCatalog())
 				._securityProfile_(SecurityProfile.BASE_SECURITY_PROFILE)
 				._inboundModelVersion_(Util.asList(new String[] { UtilMessageService.MODEL_VERSION }))
@@ -280,7 +256,7 @@ public class SelfDescriptionUtil {
 		List<ResourceCatalog> catalogList = new ArrayList<>();
 		ArrayList<Resource> offeredResources = new ArrayList<>();
 		offeredResources.add(offeredResource);
-		catalogList.add(new ResourceCatalogBuilder()._offeredResource_(offeredResources).build());
+		catalogList.add(new ResourceCatalogBuilder()._offeredResourceAsObject_(offeredResources).build());
 		return catalogList;
 	}
 	

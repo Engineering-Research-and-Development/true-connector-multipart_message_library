@@ -11,41 +11,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import de.fraunhofer.iais.eis.Action;
-import de.fraunhofer.iais.eis.ArtifactRequestMessage;
-import de.fraunhofer.iais.eis.ArtifactRequestMessageBuilder;
-import de.fraunhofer.iais.eis.ArtifactResponseMessage;
-import de.fraunhofer.iais.eis.ArtifactResponseMessageBuilder;
-import de.fraunhofer.iais.eis.BinaryOperator;
-import de.fraunhofer.iais.eis.ConnectorUnavailableMessage;
-import de.fraunhofer.iais.eis.ConnectorUnavailableMessageBuilder;
-import de.fraunhofer.iais.eis.ConnectorUpdateMessage;
-import de.fraunhofer.iais.eis.ConnectorUpdateMessageBuilder;
-import de.fraunhofer.iais.eis.Constraint;
-import de.fraunhofer.iais.eis.ConstraintBuilder;
-import de.fraunhofer.iais.eis.ContractAgreement;
-import de.fraunhofer.iais.eis.ContractAgreementBuilder;
-import de.fraunhofer.iais.eis.ContractAgreementMessage;
-import de.fraunhofer.iais.eis.ContractAgreementMessageBuilder;
-import de.fraunhofer.iais.eis.ContractRequest;
-import de.fraunhofer.iais.eis.ContractRequestBuilder;
-import de.fraunhofer.iais.eis.ContractRequestMessage;
-import de.fraunhofer.iais.eis.ContractRequestMessageBuilder;
-import de.fraunhofer.iais.eis.DescriptionRequestMessage;
-import de.fraunhofer.iais.eis.DescriptionRequestMessageBuilder;
-import de.fraunhofer.iais.eis.DynamicAttributeToken;
-import de.fraunhofer.iais.eis.DynamicAttributeTokenBuilder;
-import de.fraunhofer.iais.eis.LeftOperand;
-import de.fraunhofer.iais.eis.Message;
-import de.fraunhofer.iais.eis.Permission;
-import de.fraunhofer.iais.eis.PermissionBuilder;
-import de.fraunhofer.iais.eis.QueryLanguage;
-import de.fraunhofer.iais.eis.QueryMessage;
-import de.fraunhofer.iais.eis.QueryMessageBuilder;
-import de.fraunhofer.iais.eis.RejectionMessage;
-import de.fraunhofer.iais.eis.RejectionMessageBuilder;
-import de.fraunhofer.iais.eis.RejectionReason;
-import de.fraunhofer.iais.eis.TokenFormat;
+import de.fraunhofer.iais.eis.*;
 import de.fraunhofer.iais.eis.util.RdfResource;
 import de.fraunhofer.iais.eis.util.TypedLiteral;
 import de.fraunhofer.iais.eis.util.Util;
@@ -233,7 +199,7 @@ public class UtilMessageService {
 				._leftOperand_(LeftOperand.POLICY_EVALUATION_TIME)
 				._operator_(BinaryOperator.AFTER)
 				._rightOperand_(new RdfResource("2021-04-01T00:00:00Z", URI.create("xsd:datetimeStamp")))
-				._pipEndpoint_(URI.create("https//pip.com/policy_evaluation_time"))
+				._pipEndpoint_(new PIPBuilder()._endpointURI_(URI.create("https//pip.com/policy_evaluation_time"))._interfaceDescription_(URI.create("https//pip.com/policy_inteface_description")).build())
 				.build();
 		
 		Permission permission = new PermissionBuilder()
@@ -273,6 +239,7 @@ public class UtilMessageService {
 						._action_(Action.USE)
 						._target_(requestedArtifact)
 						._constraint_(new ConstraintBuilder()
+								._pipEndpoint_(new PIPBuilder()._endpointURI_(URI.create("https//pip.com/policy_evaluation_time"))._interfaceDescription_(URI.create("https//pip.com/policy_interface_descritpion")).build())
 								._leftOperand_(LeftOperand.POLICY_EVALUATION_TIME)
 								._operator_(BinaryOperator.AFTER)
 								._rightOperand_(new TypedLiteral("2021-06-15T00:00:00Z", URI.create("xsd:datetimeStamp")))

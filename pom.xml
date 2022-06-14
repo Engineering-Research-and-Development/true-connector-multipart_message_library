@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.eng.idsa</groupId>
 	<artifactId>multipart-message-processor</artifactId>
-	<version>1.0.14-SNAPSHOT</version>
+	<version>1.0.15-SNAPSHOT</version>
 	<name>multipart-message-processor</name>
 	<description>The library for the project Market4.0</description>
 
@@ -18,7 +18,7 @@
 	</repositories>
 	<properties>
 		<project.java.version>11</project.java.version>
-		<information.model.version>4.1.1</information.model.version>
+		<information.model.version>5.0.0</information.model.version>
 		<log4j.version>2.14.0</log4j.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
