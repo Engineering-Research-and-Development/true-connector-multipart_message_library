@@ -199,7 +199,7 @@ public class UtilMessageService {
 				._leftOperand_(LeftOperand.POLICY_EVALUATION_TIME)
 				._operator_(BinaryOperator.AFTER)
 				._rightOperand_(new RdfResource("2021-04-01T00:00:00Z", URI.create("xsd:datetimeStamp")))
-				._pipEndpoint_(new PIPBuilder()._endpointURI_(URI.create("https//pip.com/policy_evaluation_time"))._interfaceDescription_(URI.create("https//pip.com/policy_inteface_description")).build())
+				._pipEndpoint_(new PIPBuilder()._endpointURI_(URI.create("https://pip.com/policy_evaluation_time"))._interfaceDescription_(URI.create("https://pip.com/policy_inteface_description")).build())
 				.build();
 		
 		Permission permission = new PermissionBuilder()
@@ -239,7 +239,7 @@ public class UtilMessageService {
 						._action_(Action.USE)
 						._target_(requestedArtifact)
 						._constraint_(new ConstraintBuilder()
-								._pipEndpoint_(new PIPBuilder()._endpointURI_(URI.create("https//pip.com/policy_evaluation_time"))._interfaceDescription_(URI.create("https//pip.com/policy_interface_descritpion")).build())
+								._pipEndpoint_(new PIPBuilder()._endpointURI_(URI.create("https://pip.com/policy_evaluation_time"))._interfaceDescription_(URI.create("https://pip.com/policy_interface_descritpion")).build())
 								._leftOperand_(LeftOperand.POLICY_EVALUATION_TIME)
 								._operator_(BinaryOperator.AFTER)
 								._rightOperand_(new TypedLiteral("2021-06-15T00:00:00Z", URI.create("xsd:datetimeStamp")))

@@ -190,13 +190,13 @@ public class SelfDescriptionUtil {
 				._leftOperand_(LeftOperand.POLICY_EVALUATION_TIME)
 				._operator_(BinaryOperator.AFTER)
 				._rightOperand_(new RdfResource("2020-10-01T00:00:00Z", URI.create("http://www.w3.org/2001/XMLSchema#dateTimeStamp")))
-				._pipEndpoint_(new PIPBuilder()._endpointURI_(URI.create("https//pip.com/policy_evaluation_time"))._interfaceDescription_(URI.create("https//pip.com/policy_inteface_description")).build())
+				._pipEndpoint_(new PIPBuilder()._endpointURI_(URI.create("https://pip.com/policy_evaluation_time"))._interfaceDescription_(URI.create("https://pip.com/policy_inteface_description")).build())
 				.build();
 		Constraint after = new ConstraintBuilder()
 				._leftOperand_(LeftOperand.POLICY_EVALUATION_TIME)
 				._operator_(BinaryOperator.BEFORE)
 				._rightOperand_(new RdfResource("2021-31-12T23:59:00Z", URI.create("http://www.w3.org/2001/XMLSchema#dateTimeStamp")))
-				._pipEndpoint_(new PIPBuilder()._endpointURI_(URI.create("https//pip.com/policy_evaluation_time"))._interfaceDescription_(URI.create("https//pip.com/policy_inteface_description")).build())
+				._pipEndpoint_(new PIPBuilder()._endpointURI_(URI.create("https://pip.com/policy_evaluation_time"))._interfaceDescription_(URI.create("https://pip.com/policy_inteface_description")).build())
 				.build();
 		
 		Permission permission2 = new PermissionBuilder(URI.create("http://example.com/policy/catalog/" + catalogNumber + "/resource/" + resourceOrder + "restrict-access-interval"))
@@ -269,6 +269,7 @@ public class SelfDescriptionUtil {
 				._operator_(BinaryOperator.AFTER)
 				._rightOperand_(new RdfResource(dateTime.minusDays(7).format(formatter), 
 						URI.create("http://www.w3.org/2001/XMLSchema#dateTimeStamp")))
+				._pipEndpoint_(new PIPBuilder()._endpointURI_(URI.create("https://pip.com/policy_evaluation_time"))._interfaceDescription_(URI.create("https://pip.com/policy_inteface_description")).build())
 				.build();
 		
 		Constraint after = new ConstraintBuilder()
@@ -276,6 +277,7 @@ public class SelfDescriptionUtil {
 				._operator_(BinaryOperator.BEFORE)
 				._rightOperand_(new RdfResource(dateTime.plusMonths(1).format(formatter), 
 						URI.create("http://www.w3.org/2001/XMLSchema#dateTimeStamp")))
+				._pipEndpoint_(new PIPBuilder()._endpointURI_(URI.create("https://pip.com/policy_evaluation_time"))._interfaceDescription_(URI.create("https://pip.com/policy_inteface_description")).build())
 				.build();
 		
 		Permission permission2 = new PermissionBuilder()
