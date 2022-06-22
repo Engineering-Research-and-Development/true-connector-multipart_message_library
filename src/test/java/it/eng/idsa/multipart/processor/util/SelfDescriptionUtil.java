@@ -41,10 +41,10 @@ public class SelfDescriptionUtil {
 	private static final @NotNull URI ISSUER_CONNECTOR = URI.create("https://issuer.connector.com");
 	private static URI MAINTAINER = URI.create("https://maintainer.connector.com");
 	private static URI CURATOR = URI.create("https://curator.connector.com");
-	private static String INFO_MODEL_VERSION = "4.1.0";
+	private static String INFO_MODEL_VERSION = "5.0.0";
 	private static String SELF_DESCRIPTION_TITLE = "Self Description title";
 	private static String SELF_DESCRIPTION_DESCRIPTION = "Self Description - description with some more text";
-	private static String OUTBOUND_INFO_MODEL_VERSION = "4.1.0";
+	private static String OUTBOUND_INFO_MODEL_VERSION = "5.0.0";
 	private static @NotNull URI DEFAUT_ENDPOINT = URI.create("https://default.endpoint.com");;
 	private static URI ACCESS_URL = URI.create("https://access.url.com");;
 

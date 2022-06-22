@@ -28,7 +28,7 @@ public class UtilMessageService {
 	public static URI SENDER_AGENT = URI.create("http://sender.agent/sender");
 	public static URI AFFECTED_CONNECTOR = URI.create("https://affected.connector");
 	
-	public static String MODEL_VERSION = "4.1.0";
+	public static String MODEL_VERSION = "5.0.0";
 	
 	public static URI CORRELATION_MESSAGE = URI.create("http://w3id.org/artifactRequestMessage/1a421b8c-3407-44a8-aeb9-253f145c869a");
 	public static URI TRANSFER_CONTRACT = URI.create("http://w3id.org/engrd/connector/examplecontract");
