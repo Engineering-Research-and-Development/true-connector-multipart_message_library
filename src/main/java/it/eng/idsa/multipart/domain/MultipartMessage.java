@@ -4,8 +4,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.fraunhofer.iais.eis.Message;
 import it.eng.idsa.multipart.processor.MultipartMessageProcessor;
+import it.eng.idsa.multipart.util.UtilMessageService;
 
 /**
  * 
@@ -17,6 +21,8 @@ import it.eng.idsa.multipart.processor.MultipartMessageProcessor;
  * Type of the MultipartMessage.
  */
 public class MultipartMessage {
+	
+	private static final Logger logger = LoggerFactory.getLogger(MultipartMessage.class);
 	
 	private Map<String, String> httpHeaders = new HashMap<>();
 	private Map<String, String> headerHeader = new HashMap<>();
@@ -43,6 +49,35 @@ public class MultipartMessage {
 		this.signatureHeader = signatureHeader;
 		this.signatureContent = signatureContent;
 		this.token = token;
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		logger.info("MultipartMessage cleanup");
+		if(this.httpHeaders != null) {
+			this.httpHeaders.clear();
+		}
+		if(this.headerHeader != null) {
+			this.headerHeader.clear();
+		}
+		if(this.headerContent != null) {
+			this.headerContent = UtilMessageService.getArtifactRequestMessage();
+		}
+		if(this.payloadHeader != null) {
+			this.payloadHeader.clear();
+		}
+		if(this.payloadContent != null) {
+			this.payloadContent = "DUMMY";
+		}
+		if(this.signatureHeader != null) {
+			this.signatureHeader.clear();
+		}
+		if(this.signatureContent != null) {
+			this.signatureContent = "DUMMY";
+		}
+		if(this.token != null) {
+			this.token = "DUMMY";
+		}
 	}
 
 	public Map<String, String> getHttpHeaders() {
