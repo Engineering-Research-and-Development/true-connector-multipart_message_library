@@ -1,15 +1,11 @@
 package it.eng.idsa.multipart.domain;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.lang.ref.Cleaner;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import de.fraunhofer.iais.eis.Message;
 import it.eng.idsa.multipart.processor.MultipartMessageProcessor;
-import it.eng.idsa.multipart.util.UtilMessageService;
 
 /**
  * 
@@ -20,72 +16,46 @@ import it.eng.idsa.multipart.util.UtilMessageService;
 /**
  * Type of the MultipartMessage.
  */
-public class MultipartMessage {
+public class MultipartMessage implements AutoCloseable{
 	
-	private static final Logger logger = LoggerFactory.getLogger(MultipartMessage.class);
+	private static final Cleaner cleaner = Cleaner.create();
+    private final Cleaner.Cleanable cleanable;
+
+    public MultipartMessage() {
+        this.messageResources = new MultipartMessageResources();
+        this.cleanable = cleaner.register(this, cleaner(messageResources));
+    }
+
+    @Override
+    public void close() throws Exception {
+        cleanable.clean();
+    }
+
+    private static Runnable cleaner(MultipartMessageResources resource) {
+        return () -> {
+            // Perform cleanup actions
+            resource.clean();
+        };
+    }
 	
-	private Map<String, String> httpHeaders = new HashMap<>();
-	private Map<String, String> headerHeader = new HashMap<>();
-	private Message headerContent = null;
-	private Map<String, String> payloadHeader = new HashMap<>();
-	private String payloadContent = null;
-	private Map<String, String> signatureHeader= new HashMap<>();
-	private String signatureContent = null;
-	private String token = null;
-	
-	public MultipartMessage() {
-		super();
-	}
+	private MultipartMessageResources messageResources;
 	
 	public MultipartMessage(Map<String, String> httpHeaders, Map<String, String> headerHeader, Message headerContent,
 			Map<String, String> payloadHeader, String payloadContent, Map<String, String> signatureHeader,
 			String signatureContent, String token) {
 		super();
-		this.httpHeaders = httpHeaders;
-		this.headerHeader = headerHeader;
-		this.headerContent = headerContent;
-		this.payloadHeader = payloadHeader;
-		this.payloadContent = payloadContent;
-		this.signatureHeader = signatureHeader;
-		this.signatureContent = signatureContent;
-		this.token = token;
+		this.messageResources = new MultipartMessageResources(httpHeaders, headerHeader, headerContent, payloadHeader,
+				payloadContent, signatureHeader, signatureContent, token);
+		this.cleanable = cleaner.register(this, cleaner(messageResources));
 	}
 	
-	@Override
-	protected void finalize() throws Throwable {
-		logger.info("MultipartMessage cleanup");
-		if(this.httpHeaders != null) {
-			this.httpHeaders.clear();
-		}
-		if(this.headerHeader != null) {
-			this.headerHeader.clear();
-		}
-		if(this.headerContent != null) {
-			this.headerContent = UtilMessageService.getArtifactRequestMessage();
-		}
-		if(this.payloadHeader != null) {
-			this.payloadHeader.clear();
-		}
-		if(this.payloadContent != null) {
-			this.payloadContent = "DUMMY";
-		}
-		if(this.signatureHeader != null) {
-			this.signatureHeader.clear();
-		}
-		if(this.signatureContent != null) {
-			this.signatureContent = "DUMMY";
-		}
-		if(this.token != null) {
-			this.token = "DUMMY";
-		}
-	}
 
 	public Map<String, String> getHttpHeaders() {
-		return httpHeaders;
+		return messageResources.getHttpHeaders();
 	}
 	
 	public String getToken() {
-		return this.token;
+		return messageResources.getToken();
 	}
 	
 	/**
@@ -93,8 +63,8 @@ public class MultipartMessage {
 	 */
 	public String getHeaderContentString() {
 		try {
-			// return new Serializer().serializePlainJson(this.headerContent);
-			return MultipartMessageProcessor.serializeToJsonLD(this.headerContent);
+			// return new Serializer().serializePlainJson(messageResources.getHeaderContent());
+			return MultipartMessageProcessor.serializeToJsonLD(messageResources.getHeaderContent());
 		} catch (IOException e) {
 			//TODO: throw exception
 			return "";
@@ -111,66 +81,65 @@ public class MultipartMessage {
 		
 		MultipartMessage multipartMessage = (MultipartMessage) obj;
 		return
-			   (this.headerContent == null) ? (this.headerContent == multipartMessage.getHeaderContent()) : isHeaderContentEquqls(multipartMessage.getHeaderContent()) &&
-			   (this.payloadContent == null) ? (this.payloadContent == multipartMessage.getPayloadContent()) : (this.payloadContent.equals(multipartMessage.payloadContent)) &&
-			   (this.signatureContent == null) ? (this.signatureContent == multipartMessage.getSignatureContent()) : (this.getSignatureContent().equals(multipartMessage.getSignatureContent()));
+			   (messageResources.getHeaderContent() == null) ? (messageResources.getHeaderContent() == multipartMessage.getHeaderContent()) : isHeaderContentEquqls(multipartMessage.getHeaderContent()) &&
+			   (messageResources.getPayloadContent() == null) ? (messageResources.getPayloadContent() == multipartMessage.getPayloadContent()) : (messageResources.getPayloadContent().equals(multipartMessage.getPayloadContent())) &&
+			   (messageResources.getSignatureContent() == null) ? (messageResources.getSignatureContent()  == multipartMessage.getSignatureContent()) : (messageResources.getSignatureContent() .equals(multipartMessage.getSignatureContent()));
 	}
 	
 	@Override
 	public final int hashCode() {
 		
 		int result = 17;
-		if(this.headerContent != null) {
-			result = 31 * result + this.headerContent.hashCode();
+		if(messageResources.getHeaderContent() != null) {
+			result = 31 * result + messageResources.getHeaderContent().hashCode();
 		}
-		if(this.payloadContent != null) {
-			result = 31 * result + this.payloadContent.hashCode();
+		if(messageResources.getPayloadContent() != null) {
+			result = 31 * result + messageResources.getPayloadContent().hashCode();
 		}
-		if(this.signatureContent != null) {
-			result = 31 * result + this.signatureContent.hashCode();
+		if(messageResources.getSignatureContent()  != null) {
+			result = 31 * result + messageResources.getSignatureContent() .hashCode();
 		}
 		
 		return result;
 	}
 	
 	public Map<String, String> getHeaderHeader() {
-		return headerHeader;
+		return messageResources.getHeaderHeader();
 	}
 
 	public Message getHeaderContent() {
-		return headerContent;
+		return messageResources.getHeaderContent();
 	}
 
 	public Map<String, String> getPayloadHeader() {
-		return payloadHeader;
+		return messageResources.getPayloadHeader();
 	}
 
 	public String getPayloadContent() {
-		return payloadContent;
+		return messageResources.getPayloadContent();
 	}
 
 	public Map<String, String> getSignatureHeader() {
-		return signatureHeader;
+		return messageResources.getSignatureHeader();
 	}
 
 	public String getSignatureContent() {
-		return signatureContent;
+		return messageResources.getSignatureContent();
 	}
 	
 	// TODO: check this in the documentation: This should be adapted to the every new version of the: de.fraunhofer.iais.eis.Message
 	// Problem is on the Fraunhofer: In the class is not implemented method equals for the de.fraunhofer.iais.eis.Message
 	private boolean isHeaderContentEquqls(Message headerContent) {
-		return (this.headerContent.getContentVersion() == null) ? (this.headerContent.getContentVersion() == headerContent.getContentVersion()) : (this.headerContent.getContentVersion().equals(headerContent.getContentVersion())) &&
-			   (this.headerContent.getCorrelationMessage() == null) ? (this.headerContent.getCorrelationMessage() == headerContent.getCorrelationMessage()) : (this.headerContent.getCorrelationMessage().equals(headerContent.getCorrelationMessage())) &&
-			   (this.headerContent.getIssued() == null) ? (this.headerContent.getIssued() == headerContent.getIssued()) : (this.headerContent.getIssued().equals(headerContent.getIssued())) &&
-			   (this.headerContent.getIssuerConnector() == null) ? (this.headerContent.getIssuerConnector() == headerContent.getIssuerConnector()) : (this.headerContent.getIssuerConnector().equals(headerContent.getIssuerConnector())) &&
-			   (this.headerContent.getModelVersion() == null) ? (this.headerContent.getModelVersion() == headerContent.getModelVersion()) : (this.headerContent.getModelVersion().equals(headerContent.getModelVersion())) &&
-			   (this.headerContent.getRecipientAgent() == null) ? (this.headerContent.getRecipientAgent() == headerContent.getRecipientAgent()) : (this.headerContent.getRecipientAgent().equals(headerContent.getRecipientAgent())) &&
-			   (this.headerContent.getRecipientConnector() == null) ? (this.headerContent.getRecipientConnector() == headerContent.getRecipientConnector()) : (this.headerContent.getRecipientConnector().equals(headerContent.getRecipientConnector())) &&
-			   (this.headerContent.getSenderAgent() == null) ? (this.headerContent.getSenderAgent() == headerContent.getSenderAgent()) : (this.headerContent.getSenderAgent().equals(headerContent.getSenderAgent())) &&		   
-			   (this.headerContent.getTransferContract() == null) ? (this.headerContent.getTransferContract() == headerContent.getTransferContract()) : (this.headerContent.getTransferContract().equals(headerContent.getTransferContract())) &&
-			   (this.headerContent.getId() == null) ? (this.headerContent.getId() == headerContent.getId()) : (this.headerContent.getId().equals(headerContent.getId()));	   
+		return (messageResources.getHeaderContent().getContentVersion() == null) ? (messageResources.getHeaderContent().getContentVersion() == headerContent.getContentVersion()) : (messageResources.getHeaderContent().getContentVersion().equals(headerContent.getContentVersion())) &&
+			   (messageResources.getHeaderContent().getCorrelationMessage() == null) ? (messageResources.getHeaderContent().getCorrelationMessage() == headerContent.getCorrelationMessage()) : (messageResources.getHeaderContent().getCorrelationMessage().equals(headerContent.getCorrelationMessage())) &&
+			   (messageResources.getHeaderContent().getIssued() == null) ? (messageResources.getHeaderContent().getIssued() == headerContent.getIssued()) : (messageResources.getHeaderContent().getIssued().equals(headerContent.getIssued())) &&
+			   (messageResources.getHeaderContent().getIssuerConnector() == null) ? (messageResources.getHeaderContent().getIssuerConnector() == headerContent.getIssuerConnector()) : (messageResources.getHeaderContent().getIssuerConnector().equals(headerContent.getIssuerConnector())) &&
+			   (messageResources.getHeaderContent().getModelVersion() == null) ? (messageResources.getHeaderContent().getModelVersion() == headerContent.getModelVersion()) : (messageResources.getHeaderContent().getModelVersion().equals(headerContent.getModelVersion())) &&
+			   (messageResources.getHeaderContent().getRecipientAgent() == null) ? (messageResources.getHeaderContent().getRecipientAgent() == headerContent.getRecipientAgent()) : (messageResources.getHeaderContent().getRecipientAgent().equals(headerContent.getRecipientAgent())) &&
+			   (messageResources.getHeaderContent().getRecipientConnector() == null) ? (messageResources.getHeaderContent().getRecipientConnector() == headerContent.getRecipientConnector()) : (messageResources.getHeaderContent().getRecipientConnector().equals(headerContent.getRecipientConnector())) &&
+			   (messageResources.getHeaderContent().getSenderAgent() == null) ? (messageResources.getHeaderContent().getSenderAgent() == headerContent.getSenderAgent()) : (messageResources.getHeaderContent().getSenderAgent().equals(headerContent.getSenderAgent())) &&		   
+			   (messageResources.getHeaderContent().getTransferContract() == null) ? (messageResources.getHeaderContent().getTransferContract() == headerContent.getTransferContract()) : (messageResources.getHeaderContent().getTransferContract().equals(headerContent.getTransferContract())) &&
+			   (messageResources.getHeaderContent().getId() == null) ? (messageResources.getHeaderContent().getId() == headerContent.getId()) : (messageResources.getHeaderContent().getId().equals(headerContent.getId()));	   
 	}
-	
 }
 
