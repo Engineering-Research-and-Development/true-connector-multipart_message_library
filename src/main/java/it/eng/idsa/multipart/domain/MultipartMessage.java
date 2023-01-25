@@ -17,8 +17,8 @@ import de.fraunhofer.iais.eis.Message;
 public class MultipartMessage implements AutoCloseable{
 	
 	private static final Cleaner cleaner = Cleaner.create();
-    private final Cleaner.Cleanable cleanable;
-    private MultipartMessageResources messageResources;
+	private final Cleaner.Cleanable cleanable;
+	private MultipartMessageResources messageResources;
 
     public MultipartMessage() {
         this.messageResources = new MultipartMessageResources();

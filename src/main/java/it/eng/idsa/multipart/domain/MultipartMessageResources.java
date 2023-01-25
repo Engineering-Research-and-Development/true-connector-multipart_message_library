@@ -6,16 +6,12 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import de.fraunhofer.iais.eis.Message;
 import it.eng.idsa.multipart.processor.MultipartMessageProcessor;
 import it.eng.idsa.multipart.util.UtilMessageService;
 
 public class MultipartMessageResources {
-	private static final Logger logger = LoggerFactory.getLogger(MultipartMessageResources.class);
-
 	private Map<String, String> httpHeaders = new HashMap<>();
 	private Map<String, String> headerHeader = new HashMap<>();
 	private Message headerContent = null;
@@ -164,8 +160,6 @@ public class MultipartMessageResources {
 		}
 	
 	public void clean(){
-		logger.info("MultipartMessage cleanup");
-		
 		if(this.httpHeaders != null) {
 			this.httpHeaders.clear();
 		}
