@@ -4,11 +4,11 @@ Utility library that handles all IDS Info Model management, Serialization, DeSer
 
 Also has few methods for building some of the IDS Messages, like ArtifactRequestMessage, ArtifactResponseMessage, messages used in Contract Negotiation flow. User is not forced to use those methods, they are here just to provide convenient functionality for development.
 
-Current supported IDSA information model is 4.2.8
+Current supported IDSA information model is 4.0.0
 
 ```xml
 <properties>
-	<information.model.version>4.2.8</information.model.version>
+	<information.model.version>4.0.0</information.model.version>
 </properties>
 
 <dependency>
