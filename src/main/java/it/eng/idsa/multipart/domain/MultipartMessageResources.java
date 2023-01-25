@@ -1,12 +1,16 @@
 package it.eng.idsa.multipart.domain;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.fraunhofer.iais.eis.Message;
+import it.eng.idsa.multipart.processor.MultipartMessageProcessor;
 import it.eng.idsa.multipart.util.UtilMessageService;
 
 public class MultipartMessageResources {
@@ -102,6 +106,62 @@ public class MultipartMessageResources {
 	public void setToken(String token) {
 		this.token = token;
 	}
+	
+	/**
+	 * Serialize Message object to JsonLD format
+	 */
+	public String getHeaderContentString() {
+		try {
+			// return new Serializer().serializePlainJson(messageResources.getHeaderContent());
+			return MultipartMessageProcessor.serializeToJsonLD(getHeaderContent());
+		} catch (IOException e) {
+			//TODO: throw exception
+			return "";
+		} 
+	}
+	
+	/*
+	 * Two messages are equals if the: headerContent, payloadContent and signatureContent are equals.
+	 */
+	
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null || getClass() != obj.getClass()) return false;
+		MultipartMessageResources multipartMessage = (MultipartMessageResources) obj;
+		
+		return new EqualsBuilder()
+				.append(true, isHeaderContentEquals(multipartMessage.getHeaderContent()))
+				.append(this.payloadContent, multipartMessage.getPayloadContent())
+				.append(this.signatureContent, multipartMessage.getSignatureContent())
+				.append(this.token, multipartMessage.getToken())
+				.isEquals();
+	}
+	
+	// TODO: check this in the documentation: This should be adapted to the every new version of the: de.fraunhofer.iais.eis.Message
+		// Problem is on the Fraunhofer: In the class is not implemented method equals for the de.fraunhofer.iais.eis.Message
+		private boolean isHeaderContentEquals(Message headerContent) {
+			return new EqualsBuilder()
+					.append(getHeaderContent().getContentVersion(), headerContent.getContentVersion())
+					.append(getHeaderContent().getCorrelationMessage(), headerContent.getCorrelationMessage())
+					.append(getHeaderContent().getIssued(), headerContent.getIssued())
+					.append(getHeaderContent().getIssuerConnector(), headerContent.getIssuerConnector())
+					.append(getHeaderContent().getModelVersion(), headerContent.getModelVersion())
+					.append(getHeaderContent().getRecipientAgent(), headerContent.getRecipientAgent())
+					.append(getHeaderContent().getRecipientConnector(), headerContent.getRecipientConnector())
+					.append(getHeaderContent().getSenderAgent(), headerContent.getSenderAgent())
+					.append(getHeaderContent().getTransferContract(), headerContent.getTransferContract())
+					.append(getHeaderContent().getId(), headerContent.getId())
+					.isEquals();
+		}
+		
+		public final int hashCode() {
+			return new HashCodeBuilder()
+					.append(this.headerContent)
+					.append(this.payloadContent)
+					.append(this.signatureContent)
+					.append(this.token)
+					.toHashCode();
+		}
 	
 	public void clean(){
 		logger.info("MultipartMessage cleanup");
