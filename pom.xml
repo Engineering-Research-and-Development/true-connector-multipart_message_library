@@ -16,6 +16,7 @@
 			<url>https://maven.iais.fraunhofer.de/artifactory/eis-ids-public</url>
 		</repository>
 	</repositories>
+	
 	<properties>
 		<project.java.version>11</project.java.version>
 		<information.model.version>4.1.1</information.model.version>
@@ -30,6 +31,13 @@
 	      <url>https://maven.pkg.github.com/Engineering-Research-and-Development/true-connector-multipart_message_library</url>
 	    </repository>
   	</distributionManagement>
+  	
+	<scm>
+		<connection>scm:git:git://github.com/Engineering-Research-and-Development/true-connector-multipart_message_library.git</connection>
+		<developerConnection>scm:git:git@github.com:Engineering-Research-and-Development/true-connector-multipart_message_library.git</developerConnection>
+		<url>https://github.com/Engineering-Research-and-Development/true-connector-multipart_message_library.git</url>
+		<tag>HEAD</tag>
+	</scm>
 
 	<dependencies>
 		<!-- Fraunhofer -->
