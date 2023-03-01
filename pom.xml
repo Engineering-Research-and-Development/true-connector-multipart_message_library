@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.eng.idsa</groupId>
 	<artifactId>multipart-message-processor</artifactId>
-	<version>1.0.16-SNAPSHOT</version>
+	<version>1.0.16</version>
 	<name>multipart-message-processor</name>
 	<description>The library for the project Market4.0</description>
 
@@ -34,7 +34,7 @@
 		<connection>scm:git:git://github.com/Engineering-Research-and-Development/true-connector-multipart_message_library.git</connection>
 		<developerConnection>scm:git:git@github.com:Engineering-Research-and-Development/true-connector-multipart_message_library.git</developerConnection>
 		<url>https://github.com/Engineering-Research-and-Development/true-connector-multipart_message_library.git</url>
-		<tag>HEAD</tag>
+		<tag>1.0.16</tag>
 	</scm>
 
 	<dependencies>
