@@ -56,7 +56,7 @@ public class MultipartMessageProcessor {
 	
 	/**
 	 * Converts Object (String) to IDS Message
-	 * @param in
+	 * @param in Input object
 	 * @return de.fraunhofer.iais.eis.Message
 	 */
 	public static Message getMessage(Object in) {
@@ -71,22 +71,22 @@ public class MultipartMessageProcessor {
 	}
 	
 	/**
-	 * Parse String representing MultipartMessage to java object representation</br>
+	 * Parse String representing MultipartMessage to java object representation\n
 	 * Split string into multiple lines, using line separator and based from boundary and content disposition,
 	 * creates parts of Multipart message.
-	 * @param message
-	 * @return
+	 * @param message MultipartMessage as string
+	 * @return java object of MultipartMesssge
 	 */
     public static MultipartMessage parseMultipartMessage(String message) {
         return parseMultipartMessage(message, null);
     }
 
     /**
-	 * Parse String representing MultipartMessage to java object representation</br>
-	 * @see {@link it.eng.idsa.multipart.processor.MultipartMessageProcessor#parseMultipartMessage parseMultipartMessage(String message)}
-     * @param message
-     * @param contentType
-     * @return
+	 * Parse String representing MultipartMessage to java object representation\n
+	 * @see MultipartMessageProcessor#parseMultipartMessage parseMultipartMessage(String message)
+     * @param message MultipartMessage as string
+     * @param contentType Content Type
+     * @return java object of MultipartMesssge
      */
     public static MultipartMessage parseMultipartMessage(String message, String contentType) {
 
@@ -129,9 +129,10 @@ public class MultipartMessageProcessor {
 
     /**
      * Converts multipart message to string, without header ContentType
-     * For more options regarding including header Content-Type check {@link #multipartMessagetoString(MultipartMessage message, boolean includeHttpHeaders, Boolean includeJsonLd) {}
+     * For more options regarding including header Content-Type check 
+     * @see MultipartMessageProcessor#multipartMessagetoString(MultipartMessage message, boolean includeHttpHeaders, Boolean includeJsonLd)
      * @param message to be converted
-     * @return
+     * @return String representation of MultipartMesssge
      */
     public static String multipartMessagetoString(MultipartMessage message) {
         return multipartMessagetoString(message, true, null);
@@ -139,9 +140,9 @@ public class MultipartMessageProcessor {
     
     /**
      * Converts multipart message to string, without header ContentType, with http headers present
-     * @param message
-     * @param includeHttpHeaders
-     * @return
+     * @param message MultipartMesssge
+     * @param includeHttpHeaders includeHttpHeaders in response
+     * @return String representation of MultipartMesssge
      */
     public static String multipartMessagetoString(MultipartMessage message, boolean includeHttpHeaders) {
     	return multipartMessagetoString(message, includeHttpHeaders, null);
@@ -151,9 +152,9 @@ public class MultipartMessageProcessor {
      * Converts multipart message to string
      * @param message to be converted to string
      * @param includeHttpHeaders if present, overriding default ones
-     * @param includeJsonLd if true - content type is application/ld+json</br>if false - ContentType=application/json; charset=UTF-8</br> if null - Content-Type is not present
-     * @return
-     */
+     * @param includeJsonLd if true - content type is application/ld+json\nif false - ContentType=application/json; charset=UTF-8\nif null - Content-Type is not present
+     * @return String representation of MultipartMesssge
+     */ 
     public static String multipartMessagetoString(MultipartMessage message, boolean includeHttpHeaders, Boolean includeJsonLd) {
 
         StringBuilder multipartMessageString = new StringBuilder();
@@ -372,7 +373,7 @@ public class MultipartMessageProcessor {
     /**
      * Configure predicate lines in order to only extract the headers
      * @param part
-     * @return
+     * @return Map of headers
      */
     private static Map<String, String> getPartHeader(List<String> part) {
         Map<String, String> partHeader = new HashMap<String, String>();
@@ -401,7 +402,7 @@ public class MultipartMessageProcessor {
     /**
      * Configure predicate lines to skip in order to return only JSON part without headers
      * @param part
-     * @return
+     * @return String
      */
     private static String getPartContent(List<String> part) {
         OptionalInt startPostionContent = IntStream.range(0, part.size())
@@ -539,10 +540,10 @@ public class MultipartMessageProcessor {
 
     /**
      * Should not be used anymore
-     * @see {@link it.eng.idsa.multipart.processor.MultipartMessageProcessor#serializeToJsonLD serializeToJsonLD(Object object)}
-     * @param object
-     * @return
-     * @throws IOException
+     * @see MultipartMessageProcessor#serializeToJsonLD serializeToJsonLD(Object object)
+     * @param object Object for serialization
+     * @return String representation of the object
+     * @throws IOException exception if failed
      */
     public static String serializeToPlainJson(Object object) throws IOException {
         String serializePlainJson = serializer.serializePlainJson(object);
@@ -550,10 +551,10 @@ public class MultipartMessageProcessor {
     }
     
     /**
-     * Serialize message to JsonLD format, plus applying time zone handling UTC -> Z 
-     * @param object
-     * @return
-     * @throws IOException
+     * Serialize message to JsonLD format, plus applying time zone handling UTC to Z 
+     * @param object Object for serialization
+     * @return String representation of the object
+     * @throws IOException exception if failed
      */
     public static String serializeToJsonLD(Object object) throws IOException {
         String serializePlainJson = serializer.serialize(object);
