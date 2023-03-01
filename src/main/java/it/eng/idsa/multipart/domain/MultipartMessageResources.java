@@ -105,6 +105,7 @@ public class MultipartMessageResources {
 	
 	/**
 	 * Serialize Message object to JsonLD format
+	 * @return String representation of JSONLD
 	 */
 	public String getHeaderContentString() {
 		try {

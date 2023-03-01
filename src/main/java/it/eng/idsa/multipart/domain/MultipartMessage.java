@@ -69,6 +69,7 @@ public class MultipartMessage implements AutoCloseable{
 	
 	/**
 	 * Serialize Message object to JsonLD format
+	 * @return String representation of JSONLD
 	 */
 	public String getHeaderContentString() {
 		return messageResources.getHeaderContentString();

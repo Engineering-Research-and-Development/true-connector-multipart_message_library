@@ -85,7 +85,7 @@ public class UtilMessageService {
 	
 	/**
 	 * Creates ArtifactRequestMessage
-	 * @return
+	 * @return ArtifactRequestMessage
 	 */
 	public static ArtifactRequestMessage getArtifactRequestMessage() {
 		return new ArtifactRequestMessageBuilder()
@@ -102,8 +102,8 @@ public class UtilMessageService {
 	
 	/**
 	 * Creates ArtifactRequestMessage with option to pass requestedAritfact URI
-	 * @param requestedArtifact
-	 * @return
+	 * @param requestedArtifact requestedArtifact
+	 * @return ArtifactRequestMessage
 	 */
 	public static ArtifactRequestMessage getArtifactRequestMessage(URI requestedArtifact) {
 		return new ArtifactRequestMessageBuilder()
@@ -121,9 +121,9 @@ public class UtilMessageService {
 	
 	/**
 	 * Requested artifact and Transfer contract as parameters
-	 * @param requestedArtifact
-	 * @param transferContract
-	 * @return
+	 * @param requestedArtifact requestedArtifact URI
+	 * @param transferContract transferContract
+	 * @return IDS Message
 	 */
 	public static Message getArtifactRequestMessageWithTransferContract(String requestedArtifact, String transferContract) {
 		return new ArtifactRequestMessageBuilder()
@@ -139,11 +139,11 @@ public class UtilMessageService {
 	
 	/**
 	 * With additional parameters for customizing
-	 * @param requestedArtifact
-	 * @param transferContract
-	 * @param issuerConnector
-	 * @param senderAgent
-	 * @return
+	 * @param requestedArtifact requestedArtifact
+	 * @param transferContract transferContract
+	 * @param issuerConnector issuerConnector
+	 * @param senderAgent senderAgent
+	 * @return IDS Message
 	 */
 	public static Message getArtifactRequestMessage(String requestedArtifact, String transferContract, 
 			String issuerConnector, String senderAgent) {
@@ -160,7 +160,7 @@ public class UtilMessageService {
 
 	/**
 	 * Creates ArtifactResponseMessage
-	 * @return
+	 * @return ArtifactResponseMessage
 	 */
 	public static ArtifactResponseMessage getArtifactResponseMessage() {
 		return new ArtifactResponseMessageBuilder()
@@ -174,9 +174,10 @@ public class UtilMessageService {
 				.build();
 	}
 	
-	/**
+	/***
 	 * Creates RejectionMessage
-	 * @return
+	 * @param rejectionReason rejection reason
+	 * @return RejectionMessage
 	 */
 	public static RejectionMessage getRejectionMessage(RejectionReason rejectionReason) {
 		return new RejectionMessageBuilder()
@@ -194,7 +195,8 @@ public class UtilMessageService {
 	
 	/**
 	 * Creates DescriptionRequestMessage
-	 * @return
+	 * @param requestedElement requestedElement
+	 * @return DescriptionRequestMessage
 	 */
 	public static DescriptionRequestMessage getDescriptionRequestMessage(URI requestedElement) {
 		return new DescriptionRequestMessageBuilder()
@@ -209,8 +211,8 @@ public class UtilMessageService {
 	}
 
 	/**
-	 * Creates ContractAgreementMessage</br> Used as header in contract agreement flow
-	 * @return
+	 * Creates ContractAgreementMessage\n Used as header in contract agreement flow
+	 * @return ContractAgreementMessage
 	 */
 	public static ContractAgreementMessage getContractAgreementMessage() {
 		return new ContractAgreementMessageBuilder()
@@ -226,7 +228,7 @@ public class UtilMessageService {
 	
 	/**
 	 * Used as payload in contract agreement flow
-	 * @return
+	 * @return ContractAgreement
 	 */
 	public static ContractAgreement getContractAgreement() {
 		Constraint constraint = new ConstraintBuilder()
@@ -292,7 +294,7 @@ public class UtilMessageService {
 	
 	/**
 	 * Creates DynamicAttributeToken with DummyTokenValue
-	 * @return
+	 * @return DynamicAttributeToken dummy value
 	 */
 	public static DynamicAttributeToken getDynamicAttributeToken() {
 		return new DynamicAttributeTokenBuilder()
