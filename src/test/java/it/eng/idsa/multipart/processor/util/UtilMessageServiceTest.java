@@ -10,11 +10,11 @@ import de.fraunhofer.iais.eis.ConnectorUnavailableMessage;
 import de.fraunhofer.iais.eis.ConnectorUpdateMessage;
 import de.fraunhofer.iais.eis.ContractAgreement;
 import de.fraunhofer.iais.eis.ContractRequest;
+import de.fraunhofer.iais.eis.DefaultQueryLanguage;
+import de.fraunhofer.iais.eis.DefaultRejectionReason;
 import de.fraunhofer.iais.eis.Message;
-import de.fraunhofer.iais.eis.QueryLanguage;
 import de.fraunhofer.iais.eis.QueryMessage;
 import de.fraunhofer.iais.eis.RejectionMessage;
-import de.fraunhofer.iais.eis.RejectionReason;
 import it.eng.idsa.multipart.util.UtilMessageService;
 
 /**
@@ -71,7 +71,7 @@ public class UtilMessageServiceTest {
 	
 	@Test
 	public void rejectionMessage() {
-		RejectionMessage rejection = UtilMessageService.getRejectionMessage(RejectionReason.NOT_FOUND);
+		RejectionMessage rejection = UtilMessageService.getRejectionMessage(DefaultRejectionReason.NOT_FOUND);
 		assertNotNull(rejection);
 	}
 	
@@ -92,7 +92,7 @@ public class UtilMessageServiceTest {
 	@Test
 	public void queryMessage() {
 		QueryMessage query = UtilMessageService.getQueryMessage(UtilMessageService.SENDER_AGENT, UtilMessageService.ISSUER_CONNECTOR, 
-				QueryLanguage.SPARQL);
+				DefaultQueryLanguage.SPARQL);
 		assertNotNull(query);
 	}
 	

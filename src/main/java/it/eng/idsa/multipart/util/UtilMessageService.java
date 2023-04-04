@@ -11,12 +11,12 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import de.fraunhofer.iais.eis.Action;
+import de.fraunhofer.iais.eis.ArtifactBuilder;
 import de.fraunhofer.iais.eis.ArtifactRequestMessage;
 import de.fraunhofer.iais.eis.ArtifactRequestMessageBuilder;
 import de.fraunhofer.iais.eis.ArtifactResponseMessage;
 import de.fraunhofer.iais.eis.ArtifactResponseMessageBuilder;
-import de.fraunhofer.iais.eis.BinaryOperator;
+import de.fraunhofer.iais.eis.Asset;
 import de.fraunhofer.iais.eis.ConnectorUnavailableMessage;
 import de.fraunhofer.iais.eis.ConnectorUnavailableMessageBuilder;
 import de.fraunhofer.iais.eis.ConnectorUpdateMessage;
@@ -31,11 +31,15 @@ import de.fraunhofer.iais.eis.ContractRequest;
 import de.fraunhofer.iais.eis.ContractRequestBuilder;
 import de.fraunhofer.iais.eis.ContractRequestMessage;
 import de.fraunhofer.iais.eis.ContractRequestMessageBuilder;
+import de.fraunhofer.iais.eis.DataResourceBuilder;
+import de.fraunhofer.iais.eis.DefaultAction;
+import de.fraunhofer.iais.eis.DefaultBinaryOperator;
+import de.fraunhofer.iais.eis.DefaultLeftOperand;
+import de.fraunhofer.iais.eis.DefaultTokenFormat;
 import de.fraunhofer.iais.eis.DescriptionRequestMessage;
 import de.fraunhofer.iais.eis.DescriptionRequestMessageBuilder;
 import de.fraunhofer.iais.eis.DynamicAttributeToken;
 import de.fraunhofer.iais.eis.DynamicAttributeTokenBuilder;
-import de.fraunhofer.iais.eis.LeftOperand;
 import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.Permission;
 import de.fraunhofer.iais.eis.PermissionBuilder;
@@ -45,7 +49,6 @@ import de.fraunhofer.iais.eis.QueryMessageBuilder;
 import de.fraunhofer.iais.eis.RejectionMessage;
 import de.fraunhofer.iais.eis.RejectionMessageBuilder;
 import de.fraunhofer.iais.eis.RejectionReason;
-import de.fraunhofer.iais.eis.TokenFormat;
 import de.fraunhofer.iais.eis.util.RdfResource;
 import de.fraunhofer.iais.eis.util.TypedLiteral;
 import de.fraunhofer.iais.eis.util.Util;
@@ -62,7 +65,7 @@ public class UtilMessageService {
 	public static URI SENDER_AGENT = URI.create("http://sender.agent/sender");
 	public static URI AFFECTED_CONNECTOR = URI.create("https://affected.connector");
 	
-	public static String MODEL_VERSION = "4.1.0";
+	public static String MODEL_VERSION = "4.2.8";
 	
 	public static URI CORRELATION_MESSAGE = URI.create("http://w3id.org/artifactRequestMessage/1a421b8c-3407-44a8-aeb9-253f145c869a");
 	public static URI TRANSFER_CONTRACT = URI.create("http://w3id.org/engrd/connector/examplecontract");
@@ -73,9 +76,9 @@ public class UtilMessageService {
 	
 	static {
 		try {
-			ISSUED = DateUtil.now();
-			START_DATE = DateUtil.now();
-			END_DATE = DateUtil.now();
+			ISSUED = DateUtil.normalizedDateTime();
+			START_DATE = DateUtil.normalizedDateTime();
+			END_DATE = DateUtil.normalizedDateTime();
 			Duration duration = DatatypeFactory.newInstance().newDurationYearMonth(true, 0, 2);
 			END_DATE.add(duration);
 		} catch (DatatypeConfigurationException e) {
@@ -174,7 +177,7 @@ public class UtilMessageService {
 				.build();
 	}
 	
-	/***
+	/**
 	 * Creates RejectionMessage
 	 * @param rejectionReason rejection reason
 	 * @return RejectionMessage
@@ -232,17 +235,17 @@ public class UtilMessageService {
 	 */
 	public static ContractAgreement getContractAgreement() {
 		Constraint constraint = new ConstraintBuilder()
-				._leftOperand_(LeftOperand.POLICY_EVALUATION_TIME)
-				._operator_(BinaryOperator.AFTER)
+				._leftOperand_(DefaultLeftOperand.POLICY_EVALUATION_TIME)
+				._operator_(DefaultBinaryOperator.AFTER)
 				._rightOperand_(new RdfResource("2021-04-01T00:00:00Z", URI.create("xsd:datetimeStamp")))
 				._pipEndpoint_(URI.create("https//pip.com/policy_evaluation_time"))
 				.build();
 		
 		Permission permission = new PermissionBuilder()
-				._action_(Util.asList(Action.USE))
-				._target_(REQUESTED_ARTIFACT)
-				._assignee_(Util.asList(URI.create("https://assignee.com")))
-				._assigner_(Util.asList(URI.create("https://assigner.com")))
+				._action_(Util.asList(DefaultAction.USE))
+				._target_(new DataResourceBuilder().build())
+//				._assignee_(Util.asList(URI.create("https://assignee.com")))
+//				._assigner_(Util.asList(URI.create("https://assigner.com")))
 				._constraint_(Util.asList(constraint))
 				.build();
 				
@@ -268,15 +271,16 @@ public class UtilMessageService {
 	}
 	
 	public static ContractRequest getContractRequest(URI requestedArtifact, URI permissionId) {
+		Asset asset = new ArtifactBuilder(requestedArtifact).build();
 		return new ContractRequestBuilder()
 				._provider_(URI.create("https://provider.com"))
 				._consumer_(URI.create("https://consumer.com"))
 				._permission_(new PermissionBuilder(permissionId)
-						._action_(Action.USE)
-						._target_(requestedArtifact)
+						._action_(DefaultAction.USE)
+						._target_(asset)
 						._constraint_(new ConstraintBuilder()
-								._leftOperand_(LeftOperand.POLICY_EVALUATION_TIME)
-								._operator_(BinaryOperator.AFTER)
+								._leftOperand_(DefaultLeftOperand.POLICY_EVALUATION_TIME)
+								._operator_(DefaultBinaryOperator.AFTER)
 								._rightOperand_(new TypedLiteral("2021-06-15T00:00:00Z", URI.create("xsd:datetimeStamp")))
 								.build())
 						.build())
@@ -298,7 +302,7 @@ public class UtilMessageService {
 	 */
 	public static DynamicAttributeToken getDynamicAttributeToken() {
 		return new DynamicAttributeTokenBuilder()
-				._tokenFormat_(TokenFormat.JWT)
+				._tokenFormat_(DefaultTokenFormat.JWT)
 				._tokenValue_(TOKEN_VALUE)
 				.build();		
 	}
