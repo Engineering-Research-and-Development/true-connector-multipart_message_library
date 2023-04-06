@@ -62,7 +62,7 @@ public class UtilMessageService {
 	public static URI SENDER_AGENT = URI.create("http://sender.agent/sender");
 	public static URI AFFECTED_CONNECTOR = URI.create("https://affected.connector");
 	
-	public static String MODEL_VERSION = "4.1.0";
+	public static String MODEL_VERSION = "4.2.7";
 	
 	public static URI CORRELATION_MESSAGE = URI.create("http://w3id.org/artifactRequestMessage/1a421b8c-3407-44a8-aeb9-253f145c869a");
 	public static URI TRANSFER_CONTRACT = URI.create("http://w3id.org/engrd/connector/examplecontract");
@@ -73,9 +73,9 @@ public class UtilMessageService {
 	
 	static {
 		try {
-			ISSUED = DateUtil.now();
-			START_DATE = DateUtil.now();
-			END_DATE = DateUtil.now();
+			ISSUED = DateUtil.normalizedDateTime();
+			START_DATE = DateUtil.normalizedDateTime();
+			END_DATE = DateUtil.normalizedDateTime();
 			Duration duration = DatatypeFactory.newInstance().newDurationYearMonth(true, 0, 2);
 			END_DATE.add(duration);
 		} catch (DatatypeConfigurationException e) {

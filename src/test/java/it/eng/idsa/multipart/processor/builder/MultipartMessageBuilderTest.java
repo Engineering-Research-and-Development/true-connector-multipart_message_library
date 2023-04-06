@@ -19,7 +19,7 @@ public class MultipartMessageBuilderTest {
 		assertThrows(MultipartMessageException.class,
 	            ()->{
 	            	new MultipartMessageBuilder()
-            			.withHeaderContent("{\"ids:issuerConnector\":{\"@id\":\"http://w3id.org/engrd/connector/\"},\"ids:modelVersion\":\"4.1.1\",\"@type\":\"ids:ArtifactRequestMessage\",\"ids:requestedArtifact\":{\"@id\":\"http://w3id.org/engrd/connector/artifact/1\"},\"@context\":{\"ids\":\"https://w3id.org/idsa/core/\"},\"ids:issued\":{\"@value\":\"2020-11-25T16:43:27.051+01:00\",\"@type\":\"http://www.w3.org/2001/XMLSchema#dateTimeStamp\"}}")
+            			.withHeaderContent("{\"ids:issuerConnector\":{\"@id\":\"http://w3id.org/engrd/connector/\"},\"ids:modelVersion\":\"4.2.7\",\"@type\":\"ids:ArtifactRequestMessage\",\"ids:requestedArtifact\":{\"@id\":\"http://w3id.org/engrd/connector/artifact/1\"},\"@context\":{\"ids\":\"https://w3id.org/idsa/core/\"},\"ids:issued\":{\"@value\":\"2020-11-25T16:43:27.051+01:00\",\"@type\":\"http://www.w3.org/2001/XMLSchema#dateTimeStamp\"}}")
             			.withPayloadContent("payload content")
             			.build();
 	            });
