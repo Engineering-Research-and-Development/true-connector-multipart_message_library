@@ -25,4 +25,13 @@ public class DateUtil {
 		return datatypeFactory.newXMLGregorianCalendar(gc);
 	}
 	
+	/**
+	 * Use this method to get a proper dateTime. We need to have Z at the end instead of e.g. "+02:00", or we will get an exception during serialization.
+	 * 
+	 * @return Time in format: 2023-03-31T07:38:35.368Z
+	 */
+	public static XMLGregorianCalendar normalizedDateTime() {
+		return now().normalize();
+	}
+	
 }
