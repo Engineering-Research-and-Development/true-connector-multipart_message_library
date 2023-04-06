@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.eng.idsa</groupId>
 	<artifactId>multipart-message-processor</artifactId>
-	<version>1.0.17-SNAPSHOT</version>
+	<version>1.0.18-SNAPSHOT</version>
 	<name>multipart-message-processor</name>
 	<description>The library for the project Market4.0</description>
 
