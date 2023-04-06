@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -14,7 +13,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -34,8 +32,6 @@ import de.fraunhofer.iais.eis.ConstraintBuilder;
 import de.fraunhofer.iais.eis.ContentType;
 import de.fraunhofer.iais.eis.ContractOffer;
 import de.fraunhofer.iais.eis.ContractOfferBuilder;
-import de.fraunhofer.iais.eis.DataRepresentationBuilder;
-import de.fraunhofer.iais.eis.ImageRepresentationBuilder;
 import de.fraunhofer.iais.eis.Language;
 import de.fraunhofer.iais.eis.LeftOperand;
 import de.fraunhofer.iais.eis.Permission;
@@ -62,17 +58,14 @@ import it.eng.idsa.multipart.util.UtilMessageService;
  */
 public class SelfDescriptionUtil {
 	
-	private static final @NotNull URI ISSUER_CONNECTOR = URI.create("https://issuer.connector.com");
-	private static @NotNull URI DEFAUT_ENDPOINT = URI.create("https://default.endpoint.com");;
-	
 	/**
 	 * Use this method in tests to create basic self description
 	 * @return
 	 */
 	public static Connector createDefaultSelfDescription() {
 		return new BaseConnectorBuilder(URI.create("https://w3id.org/engrd/connector/"))
-				._maintainer_(URI.create("http://sender.maintainerURI.com"))
-				._curator_(URI.create("http://sender.curatorURI.com"))
+				._maintainer_(URI.create("http://connector.maintainer.com"))
+				._curator_(URI.create("http://connector.curator.com"))
 				._resourceCatalog_(getCatalog())
 				._securityProfile_(SecurityProfile.BASE_SECURITY_PROFILE)
 				._inboundModelVersion_(Util.asList(new String[] { UtilMessageService.MODEL_VERSION }))
@@ -85,71 +78,6 @@ public class SelfDescriptionUtil {
 				.build();
 	}
 
-	public static Artifact getArtifact(URI artifactId, String fileName) {
-		return new ArtifactBuilder(artifactId)
-		._creationDate_(DateUtil.normalizedDateTime())
-		._fileName_(fileName)
-		.build();
-	}
-	
-	public static Representation getDataRepresentation(URI representationURI, Artifact artifact) {
-		return new DataRepresentationBuilder(representationURI)
-				._created_(DateUtil.normalizedDateTime())
-				._instance_(Util.asList(artifact))
-				.build();
-	}
-	public static Representation getImageRepresentation(URI representationURI, Artifact artifact) {
-		return new ImageRepresentationBuilder(representationURI)
-				._created_(DateUtil.normalizedDateTime())
-				._instance_(Util.asList(artifact))
-				._height_(BigDecimal.valueOf(200))
-				._width_(BigDecimal.valueOf(450))
-				.build();
-	}
-	public static Representation getTextRepresentation(URI representationURI, Artifact artifact) {
-		return new TextRepresentationBuilder(representationURI)
-				._created_(DateUtil.normalizedDateTime())
-				._instance_(Util.asList(artifact))
-				._language_(Language.EN)
-				.build();
-	}
-	
-	/**
-	 * 
-	 * @param targetURI
-	 * @param catalogNumber
-	 * @param resourceOrder
-	 * @param offerOrder
-	 * @return
-	 */
-	public static ContractOffer createContractOffer(URI targetURI, String catalogNumber, String resourceOrder, String offerOrder) {
-		Constraint before = new ConstraintBuilder()
-				._leftOperand_(LeftOperand.POLICY_EVALUATION_TIME)
-				._operator_(BinaryOperator.AFTER)
-				._rightOperand_(new RdfResource("2020-10-01T00:00:00Z", URI.create("http://www.w3.org/2001/XMLSchema#dateTimeStamp")))
-				.build();
-		Constraint after = new ConstraintBuilder()
-				._leftOperand_(LeftOperand.POLICY_EVALUATION_TIME)
-				._operator_(BinaryOperator.BEFORE)
-				._rightOperand_(new RdfResource("2021-31-12T23:59:00Z", URI.create("http://www.w3.org/2001/XMLSchema#dateTimeStamp")))
-				.build();
-		
-		Permission permission2 = new PermissionBuilder(URI.create("http://example.com/policy/catalog/" + catalogNumber + "/resource/" + resourceOrder + "restrict-access-interval"))
-				._target_(targetURI)
-				._assignee_(Util.asList(URI.create("https://assignee.com")))
-				._assigner_(Util.asList(URI.create("https://assigner.com")))
-				._action_(Util.asList(Action.USE))
-				._constraint_(Util.asList(before, after))
-				.build();
-		URI contractOffer = URI.create("https://w3id.org/idsa/autogen/contractOffer/catalog/" + catalogNumber + "/resource/" + resourceOrder + "/offer/" + offerOrder);
-		return new ContractOfferBuilder(contractOffer)
-				._consumer_(URI.create("https://consumer.com"))
-				._provider_(URI.create("https://provider.com"))
-				._permission_(Util.asList(permission2))
-				._contractDate_(DateUtil.normalizedDateTime())
-				.build();
-	}
-	
 	private static List<ResourceCatalog> getCatalog() {
 		Artifact defaultArtifact = new ArtifactBuilder(URI.create("http://w3id.org/engrd/connector/artifact/1"))
 			._creationDate_(DateUtil.normalizedDateTime())
