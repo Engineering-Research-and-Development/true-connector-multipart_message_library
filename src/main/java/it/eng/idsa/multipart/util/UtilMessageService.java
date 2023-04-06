@@ -73,9 +73,9 @@ public class UtilMessageService {
 	
 	static {
 		try {
-			ISSUED = DateUtil.now();
-			START_DATE = DateUtil.now();
-			END_DATE = DateUtil.now();
+			ISSUED = DateUtil.normalizedDateTime();
+			START_DATE = DateUtil.normalizedDateTime();
+			END_DATE = DateUtil.normalizedDateTime();
 			Duration duration = DatatypeFactory.newInstance().newDurationYearMonth(true, 0, 2);
 			END_DATE.add(duration);
 		} catch (DatatypeConfigurationException e) {
